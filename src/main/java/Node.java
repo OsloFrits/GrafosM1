@@ -3,18 +3,26 @@ import java.util.List;
 public class Node {
     int id;
     String nome;
-    List<Node> adjacencia;
+    List<Linha> adjacencia;
 
     public Node(int id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    public void addVizinho(Node vizinho) {
-        this.adjacencia.add(vizinho);
+    public void addAdjacencia(Linha Adjacencia) {
+        this.adjacencia.add(Adjacencia);
     }
-    public void removeVizinho(Node vizinho) {
-        this.adjacencia.remove(vizinho);
+    public void removeAdjacencia(Linha Adjacencia) {
+        this.adjacencia.remove(Adjacencia);
+    }
+
+    public List<Linha> getAdjacencia() {
+        return adjacencia;
+    }
+
+    public void setAdjacencia(List<Linha> adjacencia) {
+        this.adjacencia = adjacencia;
     }
 
     public int getId() {
