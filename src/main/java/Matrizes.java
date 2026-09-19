@@ -1,10 +1,18 @@
 public class Matrizes {
-    private int[][] matrizIn, matrizAd;
 
-    public MatrizAdjacencia(Lista listaDeAdjacencia) {
-        this.matrizAd = new int[listaDeAdjacencia.getVertices()][listaDeAdjacencia.getVertices()];
+    public static int[][] MatrizAdjacencia(Lista listaDeAdjacencia) {
+        int [][] matriz = new int[listaDeAdjacencia.getVertices()][listaDeAdjacencia.getVertices()];
+
+        //aplicar codigo
+
+        return matriz;
     }
-    public MatrizIncidencia(Lista listaDeAdjacencia) {
-        this.matrizIn = new int[listaDeAdjacencia.size()][listaDeAdjacencia.size()];
+    public static int[][] MatrizIncidencia(Lista listaDeAdjacencia) {
+        int[][] matriz = new int[listaDeAdjacencia.getVertices()][listaDeAdjacencia.getLinhas()];
+
+        //aplicar codigo
+
+        return matriz;
     }
+
 }
