@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Matrizes {
@@ -23,20 +24,29 @@ public class Matrizes {
     public static int[][] matrizIncidencia(Lista lista) {
         int[][] matriz = new int[lista.getVertices()][lista.getLinhas()];
         List<Node> listaDeAdjacencia = lista.getListaDeAdjacencia();
+        List<Linha> listaDeLigacoes = new ArrayList<>();
 
-        for(Node vertice : listaDeAdjacencia){
-            List<Linha> ligacao = vertice.getAdjacencia();
-            int i = listaDeAdjacencia.indexOf(vertice);
-            for(Linha linha : ligacao){
-                int j = ligacao.indexOf(linha);
-                matriz[i][j] = 1;
-                i = listaDeAdjacencia.indexOf(linha.getDestino());
-                if (lista.isDirecionada()) {
-                    matriz[i][j] = -1;
-                } else {
-                    matriz[i][j] = 1;
+        for (Node vertice : vertices) {
+            for (Linha linha : vertice.getAdjacencia()) {
+                if (!linhas.contains(linha)) {
+                    linhas.add(linha);
                 }
             }
+        }
+
+        for(Linha linha : listaDeLigacoes){
+            int j = listaDeLigacoes.indexOf(linha);
+            int origem = listaDeAdjacencia.indexOf(linha.getOrigem());
+            int destino = listaDeAdjacencia.indexOf(linha.getDestino());
+
+            matriz[origem][j] = 1;
+
+            if(lista.isDirecionada()){
+                matriz[destino][j] = -1;
+            }else{
+                matriz[destino][j] = 1;
+            }
+
         }
         return matriz;
     }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
@@ -8,6 +9,7 @@ public class Node {
     public Node(int id, String nome) {
         this.id = id;
         this.nome = nome;
+        this.adjacencia = new ArrayList<>();
     }
 
     public void addAdjacencia(Linha Adjacencia) {
