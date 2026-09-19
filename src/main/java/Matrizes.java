@@ -9,10 +9,10 @@ public class Matrizes {
 
         for(Node vertice : listaDeAdjacencia){
             List<Linha> ligacao = vertice.getAdjacencia();
-            i = vertice.getId();
+            i = listaDeAdjacencia.indexOf(vertice);
             for(Linha linha : ligacao){
                  Node destino = linha.getDestino();
-                 j = destino.getId();
+                 j = listaDeAdjacencia.indexOf(destino);
                  matriz[i][j] = 1;
                  if(!lista.isDirecionada()){
                     matriz[j][i] = 1;

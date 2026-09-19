@@ -44,9 +44,9 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
     public void mostrarLista() {
         String R;
         for(Node vertice : ListaDeAdjacencia) {
-            String V = vertice.getNome();
+            String V = String.valueOf(vertice.getId());
             for(Linha linha : vertice.getAdjacencia()) {
-                String W = linha.getDestino().getNome();
+                String W = String.valueOf(linha.getDestino().getId());
                 if(!direcionada) {
                     R = "--" + linha.getPeso() +  "->";
                 }else{
