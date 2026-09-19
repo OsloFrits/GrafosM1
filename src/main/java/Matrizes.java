@@ -3,8 +3,8 @@ import java.util.List;
 
 public class Matrizes {
 
-    public static int[][] matrizAdjacencia(Lista lista) {
-        int [][] matriz = new int[lista.getVertices()][lista.getVertices()];//O +1 serve para ........ me esqueci
+    public static int[][] matrizAdjacencia(Lista lista) {//Resolver mega problema, como n direcionada ambos tem referencia da linha. lgo vai dar bomba
+        int [][] matriz = new int[lista.getVertices()][lista.getVertices()];
         List<Node> listaDeAdjacencia = lista.getListaDeAdjacencia();
 
         for(Node vertice : listaDeAdjacencia){
@@ -26,10 +26,10 @@ public class Matrizes {
         List<Node> listaDeAdjacencia = lista.getListaDeAdjacencia();
         List<Linha> listaDeLigacoes = new ArrayList<>();
 
-        for (Node vertice : vertices) {
+        for (Node vertice : listaDeAdjacencia) {
             for (Linha linha : vertice.getAdjacencia()) {
-                if (!linhas.contains(linha)) {
-                    linhas.add(linha);
+                if (!listaDeLigacoes.contains(linha)) {
+                    listaDeLigacoes.add(linha);
                 }
             }
         }
@@ -40,13 +40,11 @@ public class Matrizes {
             int destino = listaDeAdjacencia.indexOf(linha.getDestino());
 
             matriz[origem][j] = 1;
-
             if(lista.isDirecionada()){
                 matriz[destino][j] = -1;
             }else{
                 matriz[destino][j] = 1;
             }
-
         }
         return matriz;
     }
