@@ -1,12 +1,12 @@
 import java.util.List;
 
 public class Node {
-    private int id;
+    private static int id=0;
     private String nome;
     private List<Linha> adjacencia;
 
     public Node(int id, String nome) {
-        this.id = id;
+        this.id++;
         this.nome = nome;
     }
 
