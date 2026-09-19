@@ -1,16 +1,16 @@
 import java.util.List;
 
 public class Lista { //Colocar arqui funções de procura, mostrar e codigos q se aplicam no grafo
-    List<Node> ListaDeAdjacencia;
-    int tamanho=0;
-    int pesoTotal;
+    private List<Node> ListaDeAdjacencia;
+    private int vertices =0, linhas=0;
+    private int pesoTotal;
 
     public Lista(List<Node> listaDeAdjacencia) {
         ListaDeAdjacencia = listaDeAdjacencia;
     }
     public void addVertice(Node vertice) {
         this.ListaDeAdjacencia.add(vertice);
-        this.tamanho++;
+        this.vertices++;
     }
     public void addAresta(Node origem, Node destino, int peso, boolean direcionada) {//Nao sei se isso precisa estar dentro de lista ou fora??
         Linha adjacencia = new Linha(origem, destino, peso, direcionada);
@@ -18,12 +18,14 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         if(!direcionada) {
             destino.addAdjacencia(adjacencia);
         }
+        this.linhas++;
     }
-    public void removeAresta(Linha linha) {//caomo caralhos faço isso???
+    public void removeAresta(Litamanhonha linha) {//caomo caralhos faço isso???
         linha.getOrigem().removeAdjacencia(linha);
         if(!linha.isDirecionada()) {
             linha.getDestino().removeAdjacencia(linha);
         }
+        this.linhas--;
     }
     public void removeVertice(Node vertice) {//vou remover o vertice e todas as arestas ligadas a ele, mas COMO??? so deus sabe, e eu n sou deus. Pq eu existekkkkkkkkkkk
         this.ListaDeAdjacencia.remove(vertice);
@@ -34,7 +36,8 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
                 linha.getDestino().removeAdjacencia(linha);
             }
         }
-        this.tamanho--;
+        this.vertices--;
+        this.linhas--;
     }
     public void mostrarLista() {
         String R;
@@ -50,5 +53,29 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
                 System.out.println(V + " " + R + " " + W);
             }
         }
+    }
+
+    public int getVertices() {
+        return vertices;
+    }
+
+    public void setVertices(int vertices) {
+        this.vertices = vertices;
+    }
+
+    public int getLinhas() {
+        return linhas;
+    }
+
+    public void setLinhas(int linhas) {
+        this.linhas = linhas;
+    }
+
+    public int getPesoTotal() {
+        return pesoTotal;
+    }
+
+    public void setPesoTotal(int pesoTotal) {
+        this.pesoTotal = pesoTotal;
     }
 }

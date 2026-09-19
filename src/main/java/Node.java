@@ -1,9 +1,9 @@
 import java.util.List;
 
 public class Node {
-    int id;
-    String nome;
-    List<Linha> adjacencia;
+    private int id;
+    private String nome;
+    private List<Linha> adjacencia;
 
     public Node(int id, String nome) {
         this.id = id;

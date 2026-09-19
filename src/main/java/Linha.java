@@ -1,7 +1,8 @@
 public class Linha {
-    Node origem, destino;
-    int peso;
-    boolean direcionada;
+    private Node origem, destino;
+    private int peso;
+    private boolean direcionada;
+
     public Linha(Node origem, Node destino, int peso, boolean direcionada) {
         this.origem = origem;
         this.destino = destino;
@@ -31,6 +32,7 @@ public class Linha {
         return peso;
     }
     public void setPeso(int peso) {
+        this.peso = peso;
     }
     public boolean isDirecionada() {
         return direcionada;
