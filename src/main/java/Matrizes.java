@@ -30,12 +30,12 @@ public class Matrizes {
             for(Linha linha : ligacao){
                 int j = ligacao.indexOf(linha);
                 matriz[i][j] = 1;
-                if(!lista.isDirecionada()){
-                    i = listaDeAdjacencia.indexOf(linha.getDestino());
+                i = listaDeAdjacencia.indexOf(linha.getDestino());
+                if (lista.isDirecionada()) {
+                    matriz[i][j] = -1;
+                } else {
                     matriz[i][j] = 1;
                 }
-                i = listaDeAdjacencia.indexOf(linha.getDestino());
-                matriz[i][j] = -1;
             }
         }
         return matriz;
