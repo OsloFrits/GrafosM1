@@ -2,53 +2,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Agm {
-    private List<Node> verticesVisitados = new ArrayList<>();
-    private Lista agm;
-    private Linha linhas;
-    private Linha menorLinha = null;
-    private Node primeiroVertice = null;
-    int pesoMenor = Integer.MAX_VALUE;
 
-    public void calcularAgm(Lista lista) {
+    public Lista calcularAgm(Lista lista) {
+        Lista agm = new Lista(new ArrayList<>(), false);
+
         List<Node> listaDeAdjacencia = lista.getListaDeAdjacencia();
-        for (Node vertice : listaDeAdjacencia) {
-            for (Linha linha : vertice.getAdjacencia()) {
-                if (linha.getPeso() < pesoMenor) {
-                    if(lista.isDirecionada()) {
+        List<Node> verticesVisitados = new ArrayList<>();
+
+        Linha menorLinha = null;
+        Node proximoVertice = null;
+        int pesoMenor = Integer.MAX_VALUE;
+
+        verticesVisitados.add(listaDeAdjacencia.get(0));
+
+        while(verticesVisitados.size() < listaDeAdjacencia.size()) {
+            pesoMenor = Integer.MAX_VALUE;
+            menorLinha = null;
+            proximoVertice = null;
+            for (Node vertice : verticesVisitados) {
+                for (Linha linha : vertice.getAdjacencia()) {
+                    if (linha.getPeso() < pesoMenor && !verticesVisitados.contains(linha.getDestino())) {
                         pesoMenor = linha.getPeso();
                         menorLinha = linha;
-                        primeiroVertice = linha.getOrigem();
-                    }else{
-                        pesoMenor = linha.getPeso();
-                        menorLinha = linha;
-                        primeiroVertice = linha.getDestino();
+                        proximoVertice = linha.getDestino();
                     }
                 }
             }
-        }
-        if(lista.isDirecionada()) {
-            verticesVisitados.add(primeiroVertice);
-        }else{
+            agm.addVertice(proximoVertice);
+            if (menorLinha == null) {
+                break;
+            }else {
+                agm.addAresta(menorLinha.getOrigem(), menorLinha.getDestino(), menorLinha.getPeso());
+            }
             verticesVisitados.add(menorLinha.getDestino());
         }
-        for(Linha linha : primeiroVertice.getAdjacencia()){
-            if(!verticesVisitados.contains(linha.getDestino())) {
-                if (linha.getPeso() <= pesoMenor) {
-                    pesoMenor = linha.getPeso();
-                    menorLinha = linha;
-                    primeiroVertice = linha.getDestino();
-                    verticesVisitados.add(primeiroVertice);
-                }
-            }
-        }
-        for(Node vertice : listaDeAdjacencia){
-            verticesVisitados.add(vertice);
-            for(Linha linha : vertice.getAdjacencia()){
-                if(linha.getPeso() <= pesoMenor) {
-                    agm.addAresta(vertice, linha.getDestino(), linha.getPeso());
-                    verticesVisitados.add(linha.getDestino());
-                }
-            }
-        }
+        return agm;
     }
 }
