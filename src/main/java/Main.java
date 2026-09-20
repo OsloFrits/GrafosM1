@@ -33,6 +33,6 @@ public class Main {
         // 4) Testa loop()
         System.out.println("\n=== Existe laco? ===");
         System.out.println(grafo.loop());
-
+        //
 
 }
