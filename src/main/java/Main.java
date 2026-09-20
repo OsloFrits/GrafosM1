@@ -34,13 +34,5 @@ public class Main {
         System.out.println("\n=== Existe laco? ===");
         System.out.println(grafo.loop());
 
-        // 5) Testa matrizAdjacencia()
-        System.out.println("\n=== Matriz de adjacencia ===");
-        int[][] adjacencia = Matrizes.matrizAdjacencia(grafo);
-
-        // 6) Testa matrizIncidencia()
-        System.out.println("\n=== Matriz de incidencia ===");
-        int[][] incidencia = Matrizes.matrizIncidencia(grafo);
-    }
 
 }
