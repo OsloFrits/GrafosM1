@@ -8,13 +8,13 @@ public class JanelaGrafo {
 
         SwingUtilities.invokeLater(() -> {
 
-            JFrame janela = new JFrame("Visualização do Grafo");
+            JFrame janela = new JFrame("Grafo");
 
             janela.setDefaultCloseOperation(
                     JFrame.DISPOSE_ON_CLOSE
             );
 
-            janela.setSize(800, 600);
+            janela.setSize(1200, 1000);
 
             janela.setLocationRelativeTo(null);
 

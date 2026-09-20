@@ -1,4 +1,3 @@
-
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +22,7 @@ public class PainelGrafo extends JPanel {
     public PainelGrafo(Lista lista) {
         this.lista = lista;
 
-        setBackground(Color.WHITE);
+        setBackground(Color.GRAY);
 
         calcularPosicoes();
     }
@@ -98,8 +96,6 @@ public class PainelGrafo extends JPanel {
 
             for (Linha linha : vertice.getAdjacencia()) {
 
-                // Em grafos não direcionados,
-                // a mesma Linha aparece nas duas adjacências.
                 if (!lista.isDirecionada()
                         && arestasDesenhadas.contains(linha)) {
 
@@ -172,9 +168,14 @@ public class PainelGrafo extends JPanel {
         int fimY = (int) (destino.y - uy * RAIO_VERTICE);
 
         g2.setColor(Color.DARK_GRAY);
-        g2.setStroke(new BasicStroke(2));
+        g2.setStroke(new BasicStroke(4));
 
-        g2.drawLine(inicioX, inicioY, fimX, fimY);
+        g2.drawLine(
+                inicioX,
+                inicioY,
+                fimX,
+                fimY
+        );
 
         if (direcionada) {
 
@@ -188,16 +189,21 @@ public class PainelGrafo extends JPanel {
 
         }
 
+        double deslocamento = 10;
+
+        double deslocamentoX = -uy * deslocamento;
+        double deslocamentoY = ux * deslocamento;
+
         int meioX = (inicioX + fimX) / 2;
         int meioY = (inicioY + fimY) / 2;
 
-        g2.setColor(Color.BLUE);
-        g2.setFont(new Font("Arial", Font.BOLD, 14));
+        g2.setColor(Color.RED);
+        g2.setFont(new Font("Arial", Font.BOLD, 16));
 
         g2.drawString(
                 String.valueOf(peso),
-                meioX + 5,
-                meioY - 5
+                (int) (meioX + deslocamentoX),
+                (int) (meioY + deslocamentoY)
         );
     }
 

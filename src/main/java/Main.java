@@ -33,6 +33,13 @@ public class Main {
         System.out.println("\nAGM:");
         agm.mostrarLista();
 
-        JanelaGrafo.exibir(agm);
+        System.out.println("\nMATRIZ DE ADJACÊNCIA DA AGM:");
+        Matrizes.matrizAdjacencia(agm);
+
+        System.out.println("\nMATRIZ DE INCIDÊNCIA DA AGM:");
+        Matrizes.matrizIncidencia(agm);
+
+        ImagemGrafo.salvar(lista, "grafo.png");
+        ImagemGrafo.salvar(agm, "Agm.png");
     }
 }
