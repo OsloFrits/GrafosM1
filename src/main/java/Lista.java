@@ -57,16 +57,15 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         }
     }
     public boolean loop() {
-         for(Linha linha : vertice.getAdjacencia()) { //quando origem E destino sao o MESMO no (linha.getOrigem() == linha.getDestino()), nao quando o no atual apenas "e" o destino guardado na Linha
-            for(Linha linha : vertice.getAdjacencia()) {
-                if(linha.getDestino() == vertice) {
+        for(Node vertice : ListaDeAdjacencia) {
+            for(Linha linha : vertice.getAdjacencia()) { //quando origem E destino sao o MESMO no (linha.getOrigem() == linha.getDestino()), nao quando o no atual apenas "e" o destino guardado na Linha
+                if(linha.getOrigem() == linha.getDestino()) {
                     return true;
                 }
             }
         }
         return false;
     }
-
     public List<Node> getListaDeAdjacencia() {
         return ListaDeAdjacencia;
     }
