@@ -1,7 +1,3 @@
-package Calculos;
-
-import org.w3c.dom.Node;
-
 import java.util.List;
 
 public class Agm {
@@ -9,7 +5,7 @@ public class Agm {
     private Linha linhas;
 
     public void calcularAgm() {
-        for(Node vertice : listaDeAdjacencia) {
+        for (Node vertice : listaDeAdjacencia) {
 
         }
     }
