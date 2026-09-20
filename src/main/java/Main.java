@@ -37,22 +37,10 @@ public class Main {
         // 5) Testa matrizAdjacencia()
         System.out.println("\n=== Matriz de adjacencia ===");
         int[][] adjacencia = Matrizes.matrizAdjacencia(grafo);
-        imprimeMatriz(adjacencia);
 
         // 6) Testa matrizIncidencia()
         System.out.println("\n=== Matriz de incidencia ===");
         int[][] incidencia = Matrizes.matrizIncidencia(grafo);
-        imprimeMatriz(incidencia);
     }
 
-    // mostraMatriz() em Matrizes.java ainda esta vazia, entao uso esta
-    // funcao auxiliar aqui no Main so para poder ver o resultado no console
-    private static void imprimeMatriz(int[][] matriz) {
-        for (int[] linha : matriz) {
-            for (int valor : linha) {
-                System.out.print(valor + " ");
-            }
-            System.out.println();
-        }
-    }
 }
