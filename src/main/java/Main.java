@@ -4,10 +4,17 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Lista lista = new Lista(
-                new ArrayList<>(),
-                false
-        );
+        // =====================================================
+        // CRIACAO DO GRAFO ORIGINAL
+        // =====================================================
+
+        // false = grafo nao direcionado
+        Lista lista = new Lista(new ArrayList<>(), false);
+
+
+        // =====================================================
+        // CRIACAO DOS VERTICES
+        // =====================================================
 
         Node a = new Node(1, "A");
         Node b = new Node(2, "B");
@@ -25,6 +32,11 @@ public class Main {
         Node n = new Node(14, "N");
         Node o = new Node(15, "O");
 
+
+        // =====================================================
+        // ADICIONANDO OS VERTICES
+        // =====================================================
+
         lista.addVertice(a);
         lista.addVertice(b);
         lista.addVertice(c);
@@ -40,6 +52,11 @@ public class Main {
         lista.addVertice(m);
         lista.addVertice(n);
         lista.addVertice(o);
+
+
+        // =====================================================
+        // ADICIONANDO AS ARESTAS
+        // =====================================================
 
         lista.addAresta(a, b, 7);
         lista.addAresta(a, c, 4);
@@ -91,23 +108,171 @@ public class Main {
         lista.addAresta(l, o, 7);
 
         lista.addAresta(m, n, 2);
+
         lista.addAresta(n, o, 3);
 
+
+        // =====================================================
+        // MOSTRAR GRAFO ORIGINAL
+        // =====================================================
+
         System.out.println("GRAFO ORIGINAL:");
+
         lista.mostrarLista();
+
+
+        // =====================================================
+        // AGM
+        // =====================================================
+
+        System.out.println("\nAGM:");
 
         Lista agm = Agm.calcularAgm(lista);
 
-        System.out.println("\nAGM:");
         agm.mostrarLista();
 
+
+        // =====================================================
+        // MATRIZ DE ADJACENCIA
+        // =====================================================
+
         System.out.println("\nMATRIZ DE ADJACÊNCIA DA AGM:");
+
         Matrizes.matrizAdjacencia(agm);
 
+
+        // =====================================================
+        // MATRIZ DE INCIDENCIA
+        // =====================================================
+
         System.out.println("\nMATRIZ DE INCIDÊNCIA DA AGM:");
+
         Matrizes.matrizIncidencia(agm);
 
+
+        // =====================================================
+        // GERAR IMAGENS
+        // =====================================================
+
         ImagemGrafo.salvar(lista, "grafo.png");
+
         ImagemGrafo.salvar(agm, "Agm.png");
+
+
+        // =====================================================
+        // TESTE DO ALGORITMO DE ROY
+        // GRAFO NAO DIRECIONADO
+        // =====================================================
+
+        System.out.println("\n==============================");
+        System.out.println("TESTE DO ALGORITMO DE ROY");
+        System.out.println("==============================");
+
+        Roy.executar(lista);
+
+
+        // =====================================================
+        // TESTE DO ROY EM GRAFO DIRECIONADO
+        // =====================================================
+
+        System.out.println("\n==============================");
+        System.out.println("TESTE ROY - GRAFO DIRECIONADO");
+        System.out.println("==============================");
+
+
+        // true = grafo direcionado
+        Lista grafoRoy = new Lista(
+                new ArrayList<>(),
+                true
+        );
+
+
+        // Criamos vertices separados para esse teste
+        Node rA = new Node(101, "A");
+        Node rB = new Node(102, "B");
+        Node rC = new Node(103, "C");
+        Node rD = new Node(104, "D");
+        Node rE = new Node(105, "E");
+        Node rF = new Node(106, "F");
+
+
+        // Adicionando vertices
+        grafoRoy.addVertice(rA);
+        grafoRoy.addVertice(rB);
+        grafoRoy.addVertice(rC);
+        grafoRoy.addVertice(rD);
+        grafoRoy.addVertice(rE);
+        grafoRoy.addVertice(rF);
+
+
+        /*
+         * Primeira componente:
+         *
+         * A -> B -> C
+         * ^         |
+         * |_________|
+         *
+         * A, B e C conseguem chegar
+         * uns aos outros.
+         */
+        grafoRoy.addAresta(rA, rB, 1);
+        grafoRoy.addAresta(rB, rC, 1);
+        grafoRoy.addAresta(rC, rA, 1);
+
+
+        /*
+         * Liga C com D.
+         *
+         * Nao existe caminho de D voltando
+         * para C.
+         */
+        grafoRoy.addAresta(rC, rD, 1);
+
+
+        /*
+         * Segunda componente:
+         *
+         * D <-> E
+         */
+        grafoRoy.addAresta(rD, rE, 1);
+        grafoRoy.addAresta(rE, rD, 1);
+
+
+        /*
+         * E consegue chegar em F,
+         * mas F nao consegue voltar.
+         */
+        grafoRoy.addAresta(rE, rF, 1);
+
+
+        System.out.println("\nGrafo usado para testar Roy:");
+
+        grafoRoy.mostrarLista();
+
+
+        System.out.println("\nComponentes encontradas:");
+
+        Roy.executar(grafoRoy);
+
+
+        // =====================================================
+        // TESTE DA BUSCA EM PROFUNDIDADE
+        // =====================================================
+
+        System.out.println("\n==============================");
+        System.out.println("TESTE BUSCA EM PROFUNDIDADE");
+        System.out.println("==============================");
+
+
+        /*
+         * O numero 0 representa a posicao
+         * do vertice A na lista.
+         *
+         * 0 = A
+         * 1 = B
+         * 2 = C
+         * ...
+         */
+        BuscaProfundidade.executar(lista, 0);
     }
 }
