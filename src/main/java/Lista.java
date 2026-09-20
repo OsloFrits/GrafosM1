@@ -45,7 +45,7 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         String R;
         for(Node vertice : ListaDeAdjacencia) {
             String V = String.valueOf(vertice.getId());
-            for(Linha linha : vertice.getAdjacencia()) {
+         for(Linha linha : vertice.getAdjacencia()) { //usa getOutraPonta(vertice) em vez de getDestino(), para funcionar corretamente tanto direcionado quanto nao-direcionado
                 String W = String.valueOf(linha.getDestino().getId());
                 if(!direcionada) {
                     R = "--" + linha.getPeso() +  "->";
@@ -57,7 +57,7 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         }
     }
     public boolean loop() {
-        for(Node vertice : ListaDeAdjacencia) {
+         for(Linha linha : vertice.getAdjacencia()) { //quando origem E destino sao o MESMO no (linha.getOrigem() == linha.getDestino()), nao quando o no atual apenas "e" o destino guardado na Linha
             for(Linha linha : vertice.getAdjacencia()) {
                 if(linha.getDestino() == vertice) {
                     return true;

@@ -26,4 +26,11 @@ public class Linha {
     public void setPeso(int peso) {
         this.peso = peso;
     }
+      public Node getOutraPonta (Node atual){
+        if (atual == origem) {
+            return destino;
+        } else {
+            return origem;
+        }
+    }
 }

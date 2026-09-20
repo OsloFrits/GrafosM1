@@ -11,7 +11,7 @@ public class Matrizes {
             List<Linha> ligacao = vertice.getAdjacencia();
             int i = listaDeAdjacencia.indexOf(vertice);
             for(Linha linha : ligacao){
-                 Node destino = linha.getDestino();
+                 Node destino = linha.getOutraPonta(vertice); //Substituição do getDestino() por getOutraPonta()
                  int j = listaDeAdjacencia.indexOf(destino);
                  matriz[i][j] = 1;
                  if(!lista.isDirecionada()){
