@@ -1,81 +1,112 @@
 public class BuscaProfundidade {
 
-    public static class ResultadoBusca {
-        public Linha[] arvore;
-        public int quantidadeArvore;
-        public boolean encontrado;
-        public Node[] caminho;
-        public int tamanhoCaminho;
+    public static void executar(Lista grafo, int inicio) {
+        int quantidade = grafo.getListaDeAdjacencia().size();
+        // Marca quais vertices ja foram visitados
+        boolean[] visitados = new boolean[quantidade];
+
+        System.out.println("BUSCA EM PROFUNDIDADE:");
+        // Comeca a busca
+        busca(grafo, inicio, visitados);
+        System.out.println();
     }
 
-    public static ResultadoBusca executar(Lista grafo, Node origem, Node destino) {
-        ResultadoBusca resultado = new ResultadoBusca();
-        int n = grafo.getVertices();
-        Node[] vertices = new Node[n];
-        for (int i = 0; i < n; i++) {
-            vertices[i] = grafo.getListaDeAdjacencia().get(i);
-        }
-        boolean[] visitado = new boolean[n];
-        Node[] predecessor = new Node[n]; // predecessor[i] = quem descobriu o vertice i
-        resultado.arvore = new Linha[n > 0 ? n - 1 : 0];
-        resultado.quantidadeArvore = 0;
-        resultado.encontrado = buscar(origem, destino, vertices, visitado, predecessor, resultado);
+    /*
+     * Faz a busca em profundidade de forma recursiva.
+     */
+    private static void busca(
+            Lista grafo,
+            int atual,
+            boolean[] visitados
+    ) {
+        // Marca o vertice atual como visitado
+        visitados[atual] = true;
+        // Pega o vertice atual
+        Node verticeAtual =
+                grafo.getListaDeAdjacencia().get(atual);
+        // Mostra o vertice visitado
+        System.out.print(
+                verticeAtual.getNome() + " "
+        );
 
-        if (resultado.encontrado) {
-            int tamanho = 0;
-            Node atual = destino;
-            while (atual != null) {
-                tamanho++;
-                atual = predecessor[indiceDoNode(vertices, atual)];
+        /*
+         * Verifica todos os vertices do grafo
+         * para descobrir os vizinhos do atual.
+         */
+        for (int i = 0;
+             i < grafo.getListaDeAdjacencia().size();
+             i++) {
+            // So precisamos olhar quem ainda nao foi visitado
+            if (!visitados[i]) {
+                Node destino =
+                        grafo.getListaDeAdjacencia().get(i);
+
+                /*
+                 * Verifica se existe uma aresta
+                 * entre o vertice atual e o destino.
+                 */
+                if (existeAresta(
+                        grafo,
+                        verticeAtual,
+                        destino)) {
+
+                    /*
+                     * Entra mais fundo no grafo.
+                     */
+                    busca(
+                            grafo,
+                            i,
+                            visitados
+                    );
+                }
             }
-            resultado.caminho = new Node[tamanho];
-            resultado.tamanhoCaminho = tamanho;
-            atual = destino;
-            for (int pos = tamanho - 1; pos >= 0; pos--) {
-                resultado.caminho[pos] = atual;
-                int i = indiceDoNode(vertices, atual);
-                atual = (i >= 0) ? predecessor[i] : null;
-            }
-        } else {
-            resultado.caminho = new Node[0];
-            resultado.tamanhoCaminho = 0;
         }
-        return resultado;
     }
 
-    private static boolean buscar(Node atual, Node destino, Node[] vertices,
-                                   boolean[] visitado, Node[] predecessor, ResultadoBusca resultado) {
-        int i = indiceDoNode(vertices, atual);
-        visitado[i] = true;
-        if (atual == destino) {
-            return true;
-        }
 
-        for (int k = 0; k < atual.getAdjacencia().size(); k++) {
-            Linha l = atual.getAdjacencia().get(k);
-            Node vizinho = l.getOutraPonta(atual);
-            int j = indiceDoNode(vertices, vizinho);
+    /*
+     * Verifica se existe uma aresta entre
+     * origem e destino.
+     */
+    private static boolean existeAresta(
+            Lista grafo,
+            Node origem,
+            Node destino
+    ) {
 
-            if (!visitado[j]) {
-                predecessor[j] = atual;
-                resultado.arvore[resultado.quantidadeArvore] = l;
-                resultado.quantidadeArvore++;
-
-                if (buscar(vizinho, destino, vertices, visitado, predecessor, resultado)) {
+        /*
+         * Percorre as arestas do vertice.
+         */
+        for (Linha linha : origem.getAdjacencia()) {
+            // GRAFO DIRECIONADO
+            if (grafo.isDirecionada()) {
+                /*
+                 * Precisamos respeitar:
+                 *
+                 * origem -> destino
+                 */
+                if (linha.getOrigem() == origem
+                        && linha.getDestino() == destino) {
+                    return true;
+                }
+            }
+            // GRAFO NAO DIRECIONADO
+            else {
+                /*
+                 * Em grafo nao direcionado:
+                 * A -- B
+                 * pode ser percorrido
+                 * nos dois sentidos.
+                 */
+                if ((linha.getOrigem() == origem
+                        && linha.getDestino() == destino)
+                        ||
+                        (linha.getOrigem() == destino
+                        && linha.getDestino() == origem)) {
                     return true;
                 }
             }
         }
-
         return false;
-    }
-
-    private static int indiceDoNode(Node[] vertices, Node alvo) {
-        for (int i = 0; i < vertices.length; i++) {
-            if (vertices[i] == alvo) {
-                return i;
-            }
-        }
-        return -1;
     }
 }

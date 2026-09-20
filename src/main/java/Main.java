@@ -109,5 +109,127 @@ public class Main {
 
         ImagemGrafo.salvar(lista, "grafo.png");
         ImagemGrafo.salvar(agm, "Agm.png");
+
+        // =====================================================
+        // TESTE DO ALGORITMO DE ROY
+        // =====================================================
+
+        System.out.println("\n==============================");
+        System.out.println("TESTE DO ALGORITMO DE ROY");
+        System.out.println("==============================");
+
+        Roy.executar(lista);
+
+
+        // =====================================================
+        // TESTE ROY - GRAFO DIRECIONADO
+        // =====================================================
+
+        System.out.println("\n==============================");
+        System.out.println("TESTE ROY - GRAFO DIRECIONADO");
+        System.out.println("==============================");
+
+        // true = grafo direcionado
+        Lista grafoRoy = new Lista(
+            new ArrayList<>(),
+                true
+        );
+
+
+        // -----------------------------------------------------
+        // Criação dos vértices
+        // -----------------------------------------------------
+
+        Node rA = new Node(101, "A");
+        Node rB = new Node(102, "B");
+        Node rC = new Node(103, "C");
+        Node rD = new Node(104, "D");
+        Node rE = new Node(105, "E");
+        Node rF = new Node(106, "F");
+
+
+        // -----------------------------------------------------
+        // Adiciona os vértices
+        // -----------------------------------------------------
+
+        grafoRoy.addVertice(rA);
+        grafoRoy.addVertice(rB);
+        grafoRoy.addVertice(rC);
+        grafoRoy.addVertice(rD);
+        grafoRoy.addVertice(rE);
+        grafoRoy.addVertice(rF);
+
+
+        // =====================================================
+        // COMPONENTE 1
+        //
+        // A -> B -> C
+        // ^         |
+        // |_________|
+        //
+        // A, B e C conseguem chegar uns aos outros.
+        // =====================================================
+
+        grafoRoy.addAresta(rA, rB, 1);
+
+        grafoRoy.addAresta(rB, rC, 1);
+
+        grafoRoy.addAresta(rC, rA, 1);
+
+
+        // =====================================================
+        // Ligação da componente 1 para a componente 2
+        //
+        // C -> D
+        //
+        // IMPORTANTE:
+        // não existe caminho de D de volta para C.
+        // =====================================================
+
+        grafoRoy.addAresta(rC, rD, 1);
+
+
+        // =====================================================
+        // COMPONENTE 2
+        //
+        // D <-> E
+        //
+        // D consegue chegar em E
+        // E consegue chegar em D
+        // =====================================================
+
+        grafoRoy.addAresta(rD, rE, 1);
+
+        grafoRoy.addAresta(rE, rD, 1);
+
+
+        // =====================================================
+        // Ligação até F
+        //
+        // E -> F
+        //
+        // F não consegue voltar.
+        // Portanto F ficará sozinho.
+        // =====================================================
+
+        grafoRoy.addAresta(rE, rF, 1);
+
+
+        // -----------------------------------------------------
+        // Mostra o grafo criado
+        // -----------------------------------------------------
+
+        System.out.println("\nGrafo usado para testar Roy:");
+
+        grafoRoy.mostrarLista();
+
+
+        // -----------------------------------------------------
+        // Executa o algoritmo
+        // -----------------------------------------------------
+
+        System.out.println("\nComponentes encontradas:");
+
+        Roy.executar(grafoRoy);
     }
 }
