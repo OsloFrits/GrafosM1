@@ -66,6 +66,9 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         }
         return false;
     }
+
+
+
     public List<Node> getListaDeAdjacencia() {
         return ListaDeAdjacencia;
     }
