@@ -10,19 +10,15 @@ public class BuscaProfundidade {
 
     public static ResultadoBusca executar(Lista grafo, Node origem, Node destino) {
         ResultadoBusca resultado = new ResultadoBusca();
-
         int n = grafo.getVertices();
         Node[] vertices = new Node[n];
         for (int i = 0; i < n; i++) {
             vertices[i] = grafo.getListaDeAdjacencia().get(i);
         }
-
         boolean[] visitado = new boolean[n];
         Node[] predecessor = new Node[n]; // predecessor[i] = quem descobriu o vertice i
-
         resultado.arvore = new Linha[n > 0 ? n - 1 : 0];
         resultado.quantidadeArvore = 0;
-
         resultado.encontrado = buscar(origem, destino, vertices, visitado, predecessor, resultado);
 
         if (resultado.encontrado) {
@@ -32,10 +28,8 @@ public class BuscaProfundidade {
                 tamanho++;
                 atual = predecessor[indiceDoNode(vertices, atual)];
             }
-
             resultado.caminho = new Node[tamanho];
             resultado.tamanhoCaminho = tamanho;
-
             atual = destino;
             for (int pos = tamanho - 1; pos >= 0; pos--) {
                 resultado.caminho[pos] = atual;
@@ -46,7 +40,6 @@ public class BuscaProfundidade {
             resultado.caminho = new Node[0];
             resultado.tamanhoCaminho = 0;
         }
-
         return resultado;
     }
 
@@ -54,7 +47,6 @@ public class BuscaProfundidade {
                                    boolean[] visitado, Node[] predecessor, ResultadoBusca resultado) {
         int i = indiceDoNode(vertices, atual);
         visitado[i] = true;
-
         if (atual == destino) {
             return true;
         }
