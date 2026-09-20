@@ -50,7 +50,7 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
                 if(!direcionada) {
                     R = "--" + linha.getPeso() +  "->";
                 }else{
-                    R = "<-" + linha.getPeso() + "->";
+                    R = "--" + linha.getPeso() + "--";
                 }
                 System.out.println(V + " " + R + " " + W);
             }
