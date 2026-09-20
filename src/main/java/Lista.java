@@ -47,7 +47,7 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
             String V = String.valueOf(vertice.getId());
          for(Linha linha : vertice.getAdjacencia()) { //usa getOutraPonta(vertice) em vez de getDestino(), para funcionar corretamente tanto direcionado quanto nao-direcionado
                 String W = String.valueOf(linha.getDestino().getId());
-                if(!direcionada) {
+                if(direcionada) {
                     R = "--" + linha.getPeso() +  "->";
                 }else{
                     R = "--" + linha.getPeso() + "--";
