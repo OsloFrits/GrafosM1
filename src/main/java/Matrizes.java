@@ -19,6 +19,7 @@ public class Matrizes {
                  }
             }
         }
+        mostraMatriz(matriz, listaDeAdjacencia, "Matriz de adjacencia");
         return matriz;
     }
     public static int[][] matrizIncidencia(Lista lista) {
@@ -33,7 +34,6 @@ public class Matrizes {
                 }
             }
         }
-
         for(Linha linha : listaDeLigacoes){
             int j = listaDeLigacoes.indexOf(linha);
             int origem = listaDeAdjacencia.indexOf(linha.getOrigem());
@@ -46,11 +46,18 @@ public class Matrizes {
                 matriz[destino][j] = 1;
             }
         }
+        mostraMatriz(matriz, listaDeAdjacencia, "Matriz de incidencia");
         return matriz;
     }
 
-    public static void mostraMatriz(){
-
+    public static void mostraMatriz(int[][] matriz, List<Node> listaDeAdjacencia, String tipo){//Ta natural quanto a luz do dia...
+        System.out.println(tipo);
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                System.out.print(matriz[i][j] + " ");
+            }
+            System.out.print("|\n");
+        }
     }
 
 }

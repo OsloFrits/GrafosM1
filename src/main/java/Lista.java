@@ -29,7 +29,7 @@ public class Lista { //Colocar arqui funções de procura, mostrar e codigos q s
         }
         this.linhas--;
     }
-    public void removeVertice(Node vertice) {//vou remover o vertice e todas as arestas ligadas a ele, mas COMO??? so deus sabe, e eu n sou deus. Pq eu existekkkkkkkkkkk
+    public void removeVertice(Node vertice) {//vou remover o vertice e todas as arestas ligadas a ele, mas COMO??? so deus sabe, e eu n sou deus. Pq eu existokkkkkkkkkkk
         this.ListaDeAdjacencia.remove(vertice);
         for(Linha linha : vertice.getAdjacencia()) {
             if(!direcionada){
