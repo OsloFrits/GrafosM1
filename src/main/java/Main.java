@@ -32,70 +32,53 @@ public class Main {
         Lista lista = new Lista(new ArrayList<>(), direcionado);
 
         int opcao;
-
         do {
             mostrarMenu(lista);
             opcao = lerInteiro("Opcao: ");
-
             switch (opcao) {
-
                 case 1:
                     lista = GrafoTeste.criar(direcionado);
                     System.out.println("Grafo de teste carregado.");
                     break;
-
                 case 2:
                     adicionarVertice(lista);
                     break;
-
                 case 3:
                     removerVertice(lista);
                     break;
-
                 case 4:
                     editarVertice(lista);
                     break;
-
                 case 5:
                     adicionarAresta(lista);
                     break;
-
                 case 6:
                     removerAresta(lista);
                     break;
-
                 case 7:
                     editarAresta(lista);
                     break;
-
                 case 8:
                     mostrarGrafo(lista);
                     break;
-
                 case 9:
                     mostrarMatrizes(lista);
                     break;
-
                 case 10:
                     executarAGM(lista);
                     break;
-
                 case 11:
                     executarDFS(lista);
                     break;
-
                 case 12:
                     executarRoy(lista);
                     break;
-
                 case 0:
                     System.out.println("Programa encerrado.");
                     break;
-
                 default:
                     System.out.println("Opcao invalida.");
             }
-
         } while (opcao != 0);
 
         scanner.close();
@@ -128,16 +111,13 @@ public class Main {
         System.out.println("\n--- ADICIONAR VERTICE ---");
 
         int id = lerInteiro("ID: ");
-
         if (buscarVerticePorId(lista, id) != null) {
             System.out.println("Ja existe um vertice com esse ID.");
             return;
         }
 
         String nome = lerTexto("Nome: ");
-
         lista.addVertice(new Node(id, nome));
-
         System.out.println("Vertice adicionado.");
     }
 
@@ -151,7 +131,6 @@ public class Main {
         }
 
         int id = lerInteiro("ID: ");
-
         Node vertice = buscarVerticePorId(lista, id);
 
         if (vertice == null) {
@@ -160,7 +139,6 @@ public class Main {
         }
 
         removerVerticeSeguro(lista, vertice);
-
         System.out.println("Vertice removido.");
     }
 
@@ -174,7 +152,6 @@ public class Main {
         }
 
         int id = lerInteiro("ID: ");
-
         Node vertice = buscarVerticePorId(lista, id);
 
         if (vertice == null) {
@@ -183,11 +160,9 @@ public class Main {
         }
 
         System.out.println("Nome atual: " + vertice.getNome());
-
         String novoNome = lerTexto("Novo nome: ");
 
         vertice.setNome(novoNome);
-
         System.out.println("Vertice alterado.");
     }
 
@@ -201,7 +176,6 @@ public class Main {
         }
 
         int idOrigem = lerInteiro("ID origem: ");
-
         Node origem = buscarVerticePorId(lista, idOrigem);
 
         if (origem == null) {
@@ -210,7 +184,6 @@ public class Main {
         }
 
         int idDestino = lerInteiro("ID destino: ");
-
         Node destino = buscarVerticePorId(lista, idDestino);
 
         if (destino == null) {
@@ -219,9 +192,7 @@ public class Main {
         }
 
         int peso = lerInteiro("Peso: ");
-
         lista.addAresta(origem, destino, peso);
-
         System.out.println("Aresta adicionada.");
     }
 
