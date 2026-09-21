@@ -5,22 +5,38 @@ public class Agm {
 
     public static Lista calcularAgm(Lista lista) {
 
-        Lista agm = new Lista(new ArrayList<>(), false);
+        Lista agm =
+                new Lista(
+                        new ArrayList<>(),
+                        false
+                );
 
-        List<Node> listaDeAdjacencia = lista.getListaDeAdjacencia();
-        List<Node> verticesVisitados = new ArrayList<>();
+        List<Node> listaDeAdjacencia =
+                lista.getListaDeAdjacencia();
+
+        List<Node> verticesVisitados =
+                new ArrayList<>();
 
         Linha menorLinha = null;
         Node proximoVertice = null;
         Node origem = null;
         Node destino = null;
-        int pesoMenor = Integer.MAX_VALUE;
 
-        Node verticeInicial = listaDeAdjacencia.get(0);
+        int pesoMenor =
+                Integer.MAX_VALUE;
 
-        verticesVisitados.add(verticeInicial);
+        int pesoTotal = 0;
 
-        for (Node vertice : listaDeAdjacencia) {
+        Node verticeInicial =
+                listaDeAdjacencia.get(0);
+
+        verticesVisitados.add(
+                verticeInicial
+        );
+
+        for (Node vertice :
+                listaDeAdjacencia) {
+
             agm.addVertice(
                     new Node(
                             vertice.getId(),
@@ -29,30 +45,49 @@ public class Agm {
             );
         }
 
-        while (verticesVisitados.size() < listaDeAdjacencia.size()) {
-            pesoMenor = Integer.MAX_VALUE;
+        while (
+                verticesVisitados.size()
+                        < listaDeAdjacencia.size()
+        ) {
+
+            pesoMenor =
+                    Integer.MAX_VALUE;
+
             menorLinha = null;
             proximoVertice = null;
 
-            for (Node vertice : verticesVisitados) {
-                for (Linha linha : vertice.getAdjacencia()) {
+            for (Node vertice :
+                    verticesVisitados) {
+
+                for (Linha linha :
+                        vertice.getAdjacencia()) {
 
                     Node outroVertice;
 
                     if (linha.getOrigem() == vertice) {
-                        outroVertice = linha.getDestino();
+                        outroVertice =
+                                linha.getDestino();
                     } else {
-                        outroVertice = linha.getOrigem();
+                        outroVertice =
+                                linha.getOrigem();
                     }
 
-                    if (verticesVisitados.contains(outroVertice)) {
+                    if (verticesVisitados.contains(
+                            outroVertice)) {
+
                         continue;
                     }
 
                     if (linha.getPeso() < pesoMenor) {
-                        pesoMenor = linha.getPeso();
-                        menorLinha = linha;
-                        proximoVertice = outroVertice;
+
+                        pesoMenor =
+                                linha.getPeso();
+
+                        menorLinha =
+                                linha;
+
+                        proximoVertice =
+                                outroVertice;
                     }
                 }
             }
@@ -61,16 +96,30 @@ public class Agm {
                 break;
             }
 
-            for (Node vertice : agm.getListaDeAdjacencia()) {
+            for (Node vertice :
+                    agm.getListaDeAdjacencia()) {
 
-                if (vertice.getId() == menorLinha.getOrigem().getId()) {
+                if (
+                        vertice.getId()
+                                == menorLinha
+                                .getOrigem()
+                                .getId()
+                ) {
+
                     origem = vertice;
                 }
             }
 
-            for (Node vertice : agm.getListaDeAdjacencia()) {
+            for (Node vertice :
+                    agm.getListaDeAdjacencia()) {
 
-                if (vertice.getId() == menorLinha.getDestino().getId()) {
+                if (
+                        vertice.getId()
+                                == menorLinha
+                                .getDestino()
+                                .getId()
+                ) {
+
                     destino = vertice;
                 }
             }
@@ -81,21 +130,18 @@ public class Agm {
                     menorLinha.getPeso()
             );
 
-            verticesVisitados.add(proximoVertice);
+            pesoTotal +=
+                    menorLinha.getPeso();
+
+            verticesVisitados.add(
+                    proximoVertice
+            );
         }
+
+        agm.setPesoTotal(
+                pesoTotal
+        );
 
         return agm;
-    }
-
-    private static Node buscarVertice(Lista lista, int id) {
-
-        for (Node vertice : lista.getListaDeAdjacencia()) {
-
-            if (vertice.getId() == id) {
-                return vertice;
-            }
-        }
-
-        return null;
     }
 }

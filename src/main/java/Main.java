@@ -17,75 +17,71 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("=================================");
-        System.out.println("       GERENCIADOR DE GRAFO");
-        System.out.println("=================================");
-
-        boolean direcionada = lerBoolean(
-                "O grafo sera direcionado? (s/n): "
-        );
-
-        Lista lista = new Lista(new ArrayList<>(), direcionada);
+        Lista lista = new Lista(new ArrayList<>(), false);
 
         int opcao;
 
         do {
             mostrarMenu(lista);
-
-            opcao = lerInteiro("Escolha uma opcao: ");
+            opcao = lerInteiro("Opcao: ");
 
             switch (opcao) {
 
                 case 1:
-                    adicionarVertice(lista);
+                    lista = GrafoTeste.criar();
+                    System.out.println("Grafo de teste carregado.");
                     break;
 
                 case 2:
-                    removerVertice(lista);
+                    adicionarVertice(lista);
                     break;
 
                 case 3:
-                    editarVertice(lista);
+                    removerVertice(lista);
                     break;
 
                 case 4:
-                    adicionarAresta(lista);
+                    editarVertice(lista);
                     break;
 
                 case 5:
-                    removerAresta(lista);
+                    adicionarAresta(lista);
                     break;
 
                 case 6:
-                    editarAresta(lista);
+                    removerAresta(lista);
                     break;
 
                 case 7:
-                    mostrarGrafo(lista);
+                    editarAresta(lista);
                     break;
 
                 case 8:
-                    mostrarMatrizes(lista);
+                    mostrarGrafo(lista);
                     break;
 
                 case 9:
-                    executarAGM(lista);
+                    mostrarMatrizes(lista);
                     break;
 
                 case 10:
-                    executarDFS(lista);
+                    executarAGM(lista);
                     break;
 
                 case 11:
+                    executarDFS(lista);
+                    break;
+
+                case 12:
                     executarRoy(lista);
                     break;
 
                 case 0:
-                    System.out.println("\nPrograma encerrado.");
+                    System.out.println("Programa encerrado.");
                     break;
 
                 default:
-                    System.out.println("\nOpcao invalida.");
+                    System.out.println("Opcao invalida.");
             }
 
         } while (opcao != 0);
@@ -93,75 +89,56 @@ public class Main {
         scanner.close();
     }
 
-    // =========================================================
-    // MENU
-    // =========================================================
-
     public static void mostrarMenu(Lista lista) {
 
-        System.out.println("\n=================================");
-        System.out.println("             MENU");
-        System.out.println("=================================");
-        System.out.println("Vertices: " + lista.getVertices());
-        System.out.println("Arestas:  " + lista.getLinhas());
-        System.out.println("---------------------------------");
-
-        System.out.println("1  - Adicionar vertice");
-        System.out.println("2  - Remover vertice");
-        System.out.println("3  - Editar vertice");
-
-        System.out.println("4  - Adicionar aresta");
-        System.out.println("5  - Remover aresta");
-        System.out.println("6  - Editar aresta");
-
-        System.out.println("---------------------------------");
-
-        System.out.println("7  - Mostrar grafo");
-        System.out.println("8  - Mostrar matrizes");
-
-        System.out.println("9  - Executar AGM");
-        System.out.println("10 - Executar DFS");
-        System.out.println("11 - Executar Roy");
-
-        System.out.println("---------------------------------");
+        System.out.println("\n========== GRAFO ==========");
+        System.out.println("Vertices: " + lista.getVertices()
+                + " | Arestas: " + lista.getLinhas());
+        System.out.println("----------------------------");
+        System.out.println("1  - Carregar grafo de teste");
+        System.out.println("2  - Adicionar vertice");
+        System.out.println("3  - Remover vertice");
+        System.out.println("4  - Editar vertice");
+        System.out.println("5  - Adicionar aresta");
+        System.out.println("6  - Remover aresta");
+        System.out.println("7  - Editar aresta");
+        System.out.println("8  - Mostrar grafo");
+        System.out.println("9  - Mostrar matrizes");
+        System.out.println("10 - Executar AGM");
+        System.out.println("11 - Executar DFS");
+        System.out.println("12 - Executar Roy");
         System.out.println("0  - Sair");
-        System.out.println("=================================");
+        System.out.println("============================");
     }
-
-    // =========================================================
-    // VERTICES
-    // =========================================================
 
     public static void adicionarVertice(Lista lista) {
 
         System.out.println("\n--- ADICIONAR VERTICE ---");
 
-        int id = lerInteiro("ID do vertice: ");
+        int id = lerInteiro("ID: ");
 
         if (buscarVerticePorId(lista, id) != null) {
             System.out.println("Ja existe um vertice com esse ID.");
             return;
         }
 
-        String nome = lerTexto("Nome do vertice: ");
+        String nome = lerTexto("Nome: ");
 
-        Node vertice = new Node(id, nome);
+        lista.addVertice(new Node(id, nome));
 
-        lista.addVertice(vertice);
-
-        System.out.println("Vertice adicionado com sucesso.");
+        System.out.println("Vertice adicionado.");
     }
 
     public static void removerVertice(Lista lista) {
 
         System.out.println("\n--- REMOVER VERTICE ---");
 
-        if (lista.getListaDeAdjacencia().isEmpty()) {
-            System.out.println("Nao existem vertices no grafo.");
+        if (lista.getVertices() == 0) {
+            System.out.println("O grafo esta vazio.");
             return;
         }
 
-        int id = lerInteiro("ID do vertice que deseja remover: ");
+        int id = lerInteiro("ID: ");
 
         Node vertice = buscarVerticePorId(lista, id);
 
@@ -172,19 +149,19 @@ public class Main {
 
         removerVerticeSeguro(lista, vertice);
 
-        System.out.println("Vertice removido com sucesso.");
+        System.out.println("Vertice removido.");
     }
 
     public static void editarVertice(Lista lista) {
 
         System.out.println("\n--- EDITAR VERTICE ---");
 
-        if (lista.getListaDeAdjacencia().isEmpty()) {
-            System.out.println("Nao existem vertices no grafo.");
+        if (lista.getVertices() == 0) {
+            System.out.println("O grafo esta vazio.");
             return;
         }
 
-        int id = lerInteiro("ID do vertice que deseja editar: ");
+        int id = lerInteiro("ID: ");
 
         Node vertice = buscarVerticePorId(lista, id);
 
@@ -199,12 +176,8 @@ public class Main {
 
         vertice.setNome(novoNome);
 
-        System.out.println("Vertice alterado com sucesso.");
+        System.out.println("Vertice alterado.");
     }
-
-    // =========================================================
-    // ARESTAS
-    // =========================================================
 
     public static void adicionarAresta(Lista lista) {
 
@@ -215,27 +188,29 @@ public class Main {
             return;
         }
 
-        int idOrigem = lerInteiro("ID da origem: ");
+        int idOrigem = lerInteiro("ID origem: ");
+
         Node origem = buscarVerticePorId(lista, idOrigem);
 
         if (origem == null) {
-            System.out.println("Vertice de origem nao encontrado.");
+            System.out.println("Origem nao encontrada.");
             return;
         }
 
-        int idDestino = lerInteiro("ID do destino: ");
+        int idDestino = lerInteiro("ID destino: ");
+
         Node destino = buscarVerticePorId(lista, idDestino);
 
         if (destino == null) {
-            System.out.println("Vertice de destino nao encontrado.");
+            System.out.println("Destino nao encontrado.");
             return;
         }
 
-        int peso = lerInteiro("Peso da aresta: ");
+        int peso = lerInteiro("Peso: ");
 
         lista.addAresta(origem, destino, peso);
 
-        System.out.println("Aresta adicionada com sucesso.");
+        System.out.println("Aresta adicionada.");
     }
 
     public static void removerAresta(Lista lista) {
@@ -243,18 +218,18 @@ public class Main {
         System.out.println("\n--- REMOVER ARESTA ---");
 
         if (lista.getLinhas() == 0) {
-            System.out.println("Nao existem arestas no grafo.");
+            System.out.println("Nao existem arestas.");
             return;
         }
 
-        int idOrigem = lerInteiro("ID da origem: ");
-        int idDestino = lerInteiro("ID do destino: ");
+        int idOrigem = lerInteiro("ID origem: ");
+        int idDestino = lerInteiro("ID destino: ");
 
         Node origem = buscarVerticePorId(lista, idOrigem);
         Node destino = buscarVerticePorId(lista, idDestino);
 
         if (origem == null || destino == null) {
-            System.out.println("Um dos vertices nao foi encontrado.");
+            System.out.println("Vertice nao encontrado.");
             return;
         }
 
@@ -267,7 +242,7 @@ public class Main {
 
         lista.removeAresta(linha);
 
-        System.out.println("Aresta removida com sucesso.");
+        System.out.println("Aresta removida.");
     }
 
     public static void editarAresta(Lista lista) {
@@ -275,18 +250,18 @@ public class Main {
         System.out.println("\n--- EDITAR ARESTA ---");
 
         if (lista.getLinhas() == 0) {
-            System.out.println("Nao existem arestas no grafo.");
+            System.out.println("Nao existem arestas.");
             return;
         }
 
-        int idOrigem = lerInteiro("ID da origem: ");
-        int idDestino = lerInteiro("ID do destino: ");
+        int idOrigem = lerInteiro("ID origem: ");
+        int idDestino = lerInteiro("ID destino: ");
 
         Node origem = buscarVerticePorId(lista, idOrigem);
         Node destino = buscarVerticePorId(lista, idDestino);
 
         if (origem == null || destino == null) {
-            System.out.println("Um dos vertices nao foi encontrado.");
+            System.out.println("Vertice nao encontrado.");
             return;
         }
 
@@ -299,20 +274,19 @@ public class Main {
 
         System.out.println("Peso atual: " + linha.getPeso());
 
-        int novoPeso = lerInteiro("Novo peso: ");
+        int peso = lerInteiro("Novo peso: ");
 
-        linha.setPeso(novoPeso);
+        linha.setPeso(peso);
 
-        System.out.println("Aresta alterada com sucesso.");
+        System.out.println("Aresta alterada.");
     }
 
-    // =========================================================
-    // BUSCAS
-    // =========================================================
+    public static Node buscarVerticePorId(
+            Lista lista,
+            int id) {
 
-    public static Node buscarVerticePorId(Lista lista, int id) {
-
-        for (Node vertice : lista.getListaDeAdjacencia()) {
+        for (Node vertice :
+                lista.getListaDeAdjacencia()) {
 
             if (vertice.getId() == id) {
                 return vertice;
@@ -327,9 +301,11 @@ public class Main {
             Node origem,
             Node destino) {
 
-        for (Node vertice : lista.getListaDeAdjacencia()) {
+        for (Node vertice :
+                lista.getListaDeAdjacencia()) {
 
-            for (Linha linha : vertice.getAdjacencia()) {
+            for (Linha linha :
+                    vertice.getAdjacencia()) {
 
                 if (lista.isDirecionada()) {
 
@@ -356,203 +332,248 @@ public class Main {
         return null;
     }
 
-    // =========================================================
-    // REMOVER VERTICE
-    // =========================================================
-
     public static void removerVerticeSeguro(
             Lista lista,
             Node vertice) {
 
-        List<Linha> linhasParaRemover = new ArrayList<>();
+        List<Linha> linhasParaRemover =
+                new ArrayList<>();
 
-        /*
-         * Procuramos todas as arestas que possuem o vertice.
-         * Isso tambem encontra arestas de entrada em grafos direcionados.
-         */
+        for (Node atual :
+                lista.getListaDeAdjacencia()) {
 
-        for (Node atual : lista.getListaDeAdjacencia()) {
-
-            for (Linha linha : atual.getAdjacencia()) {
+            for (Linha linha :
+                    atual.getAdjacencia()) {
 
                 if (linha.getOrigem() == vertice
                         || linha.getDestino() == vertice) {
 
-                    if (!linhasParaRemover.contains(linha)) {
+                    if (!linhasParaRemover
+                            .contains(linha)) {
+
                         linhasParaRemover.add(linha);
                     }
                 }
             }
         }
 
-        /*
-         * Remove as arestas das listas de adjacencia.
-         */
+        for (Linha linha :
+                linhasParaRemover) {
 
-        for (Linha linha : linhasParaRemover) {
+            linha.getOrigem()
+                    .removeAdjacencia(linha);
 
-            linha.getOrigem().removeAdjacencia(linha);
-            linha.getDestino().removeAdjacencia(linha);
+            linha.getDestino()
+                    .removeAdjacencia(linha);
         }
 
-        /*
-         * Remove o vertice da lista principal.
-         */
+        lista.getListaDeAdjacencia()
+                .remove(vertice);
 
-        lista.getListaDeAdjacencia().remove(vertice);
-
-        lista.setVertices(lista.getListaDeAdjacencia().size());
+        lista.setVertices(
+                lista.getListaDeAdjacencia().size()
+        );
 
         lista.setLinhas(
-                Math.max(0, lista.getLinhas() - linhasParaRemover.size())
+                Math.max(
+                        0,
+                        lista.getLinhas()
+                                - linhasParaRemover.size()
+                )
         );
     }
-
-    // =========================================================
-    // MOSTRAR GRAFO
-    // =========================================================
 
     public static void mostrarGrafo(Lista lista) {
 
         if (lista.getVertices() == 0) {
-            System.out.println("\nO grafo esta vazio.");
+            System.out.println("O grafo esta vazio.");
             return;
         }
 
-        System.out.println("\nGerando imagem do grafo...");
-
         String arquivo = "grafo.png";
 
-        ImagemGrafo.salvar(lista, arquivo);
+        ImagemGrafo.salvar(
+                lista,
+                arquivo
+        );
 
-        System.out.println("Grafo gerado em: " + arquivo);
-
-        mostrarImagem(arquivo);
+        mostrarImagem(
+                "imgs/" + arquivo
+        );
     }
-
-    // =========================================================
-    // MATRIZES
-    // =========================================================
 
     public static void mostrarMatrizes(Lista lista) {
 
         if (lista.getVertices() == 0) {
-            System.out.println("\nO grafo esta vazio.");
+            System.out.println("O grafo esta vazio.");
             return;
         }
 
-        System.out.println("\n--- MATRIZ DE ADJACENCIA ---");
+        System.out.println(
+                "\n--- MATRIZ DE ADJACENCIA ---"
+        );
 
         int[][] matrizAdjacencia =
                 Matrizes.matrizAdjacencia(lista);
 
-        imprimirMatriz(matrizAdjacencia);
+        imprimirMatriz(
+                matrizAdjacencia
+        );
 
-        System.out.println("\n--- MATRIZ DE INCIDENCIA ---");
+        System.out.println(
+                "\n--- MATRIZ DE INCIDENCIA ---"
+        );
 
         int[][] matrizIncidencia =
                 Matrizes.matrizIncidencia(lista);
 
-        imprimirMatriz(matrizIncidencia);
+        imprimirMatriz(
+                matrizIncidencia
+        );
     }
 
-    public static void imprimirMatriz(int[][] matriz) {
+    public static void imprimirMatriz(
+            int[][] matriz) {
 
         for (int[] linha : matriz) {
 
             for (int valor : linha) {
-                System.out.print(valor + "\t");
+                System.out.print(
+                        valor + "\t"
+                );
             }
 
             System.out.println();
         }
     }
 
-    // =========================================================
-    // AGM
-    // =========================================================
-
     public static void executarAGM(Lista lista) {
 
         if (lista.getVertices() == 0) {
-            System.out.println("\nO grafo esta vazio.");
-            return;
-        }
-
-        if (lista.isDirecionada()) {
             System.out.println(
-                    "\nAGM nao pode ser executada nesse grafo direcionado."
+                    "O grafo esta vazio."
             );
             return;
         }
 
-        System.out.println("\nCalculando AGM...");
+        if (lista.isDirecionada()) {
 
-        Lista agm = Agm.calcularAgm(lista);
+            System.out.println(
+                    "AGM nao pode ser executada em grafo direcionado."
+            );
 
-        System.out.println("AGM calculada com sucesso.");
+            return;
+        }
+
+        System.out.println(
+                "Calculando AGM..."
+        );
+
+        Lista agm =
+                Agm.calcularAgm(lista);
+
+        System.out.println(
+                "AGM calculada."
+        );
+
+        System.out.println(
+                "Peso total da AGM: "
+                        + agm.getPesoTotal()
+        );
 
         String arquivo = "AGM.png";
 
-        ImagemGrafo.salvar(agm, arquivo);
+        ImagemGrafo.salvarAgm(
+                agm,
+                arquivo
+        );
 
-        System.out.println("Imagem da AGM salva em: " + arquivo);
-
-        mostrarImagem(arquivo);
+        mostrarImagem(
+                "imgs/" + arquivo
+        );
     }
-
-    // =========================================================
-    // DFS
-    // =========================================================
 
     public static void executarDFS(Lista lista) {
 
         if (lista.getVertices() == 0) {
-            System.out.println("\nO grafo esta vazio.");
+
+            System.out.println(
+                    "O grafo esta vazio."
+            );
+
             return;
         }
 
-        System.out.println("\n--- BUSCA EM PROFUNDIDADE ---");
-
-        int id = lerInteiro(
-                "ID do vertice onde deseja iniciar a DFS: "
+        System.out.println(
+                "\n--- BUSCA EM PROFUNDIDADE ---"
         );
 
-        Node vertice = buscarVerticePorId(lista, id);
+        int id =
+                lerInteiro("ID inicial: ");
+
+        Node vertice =
+                buscarVerticePorId(
+                        lista,
+                        id
+                );
 
         if (vertice == null) {
-            System.out.println("Vertice nao encontrado.");
+
+            System.out.println(
+                    "Vertice nao encontrado."
+            );
+
             return;
         }
 
         int indice =
-                lista.getListaDeAdjacencia().indexOf(vertice);
+                lista.getListaDeAdjacencia()
+                        .indexOf(vertice);
 
-        BuscaProfundidade.executar(lista, indice);
+        List<Node> ordem =
+                BuscaProfundidade.executar(
+                        lista,
+                        indice
+                );
 
-        System.out.println("DFS executada com sucesso.");
+        System.out.println(
+                "DFS executada."
+        );
+
+        String arquivo = "DFS.png";
+
+        ImagemGrafo.salvarDFS(
+                lista,
+                ordem,
+                arquivo
+        );
+
+        mostrarImagem(
+                "imgs/" + arquivo
+        );
     }
-
-    // =========================================================
-    // ROY
-    // =========================================================
 
     public static void executarRoy(Lista lista) {
 
         if (lista.getVertices() == 0) {
-            System.out.println("\nO grafo esta vazio.");
+
+            System.out.println(
+                    "O grafo esta vazio."
+            );
+
             return;
         }
 
-        System.out.println("\nExecutando Roy...");
+        System.out.println(
+                "Executando Roy..."
+        );
 
         List<List<Node>> componentes =
                 Roy.executar(lista);
 
-        System.out.println("Roy executado com sucesso.");
-
         System.out.println(
-                "Componentes encontrados: " + componentes.size()
+                "Roy executado. Componentes encontrados: "
+                        + componentes.size()
         );
 
         String arquivo = "Roy.png";
@@ -563,29 +584,29 @@ public class Main {
                 arquivo
         );
 
-        System.out.println(
-                "Imagem do resultado salva em: " + arquivo
+        mostrarImagem(
+                "imgs/" + arquivo
         );
-
-        mostrarImagem(arquivo);
     }
 
-    // =========================================================
-    // EXIBIR IMAGEM
-    // =========================================================
+    public static void mostrarImagem(
+            String caminho) {
 
-    public static void mostrarImagem(String caminho) {
-
-        File arquivo = new File(caminho);
+        File arquivo =
+                new File(caminho);
 
         if (!arquivo.exists()) {
+
             System.out.println(
-                    "Nao foi possivel encontrar a imagem."
+                    "Imagem nao encontrada: "
+                            + caminho
             );
+
             return;
         }
 
-        JFrame janela = new JFrame("Grafo");
+        JFrame janela =
+                new JFrame("Grafo");
 
         ImageIcon imagemOriginal =
                 new ImageIcon(caminho);
@@ -593,8 +614,11 @@ public class Main {
         Image imagem =
                 imagemOriginal.getImage();
 
-        int largura = imagemOriginal.getIconWidth();
-        int altura = imagemOriginal.getIconHeight();
+        int largura =
+                imagemOriginal.getIconWidth();
+
+        int altura =
+                imagemOriginal.getIconHeight();
 
         int larguraMaxima = 1000;
         int alturaMaxima = 700;
@@ -603,27 +627,41 @@ public class Main {
                 || altura > alturaMaxima) {
 
             double escalaX =
-                    (double) larguraMaxima / largura;
+                    (double) larguraMaxima
+                            / largura;
 
             double escalaY =
-                    (double) alturaMaxima / altura;
+                    (double) alturaMaxima
+                            / altura;
 
             double escala =
-                    Math.min(escalaX, escalaY);
+                    Math.min(
+                            escalaX,
+                            escalaY
+                    );
 
-            largura = (int) (largura * escala);
-            altura = (int) (altura * escala);
+            largura =
+                    (int) (
+                            largura * escala
+                    );
 
-            imagem = imagem.getScaledInstance(
-                    largura,
-                    altura,
-                    Image.SCALE_SMOOTH
-            );
+            altura =
+                    (int) (
+                            altura * escala
+                    );
+
+            imagem =
+                    imagem.getScaledInstance(
+                            largura,
+                            altura,
+                            Image.SCALE_SMOOTH
+                    );
         }
 
-        JLabel label = new JLabel(
-                new ImageIcon(imagem)
-        );
+        JLabel label =
+                new JLabel(
+                        new ImageIcon(imagem)
+                );
 
         label.setHorizontalAlignment(
                 SwingConstants.CENTER
@@ -635,8 +673,14 @@ public class Main {
         );
 
         janela.setSize(
-                Math.min(largura + 50, 1100),
-                Math.min(altura + 80, 800)
+                Math.min(
+                        largura + 50,
+                        1100
+                ),
+                Math.min(
+                        altura + 80,
+                        800
+                )
         );
 
         janela.setLocationRelativeTo(null);
@@ -667,40 +711,49 @@ public class Main {
         );
 
         System.out.println(
-                "Pressione ENTER na janela da imagem para voltar ao menu."
+                "Pressione ENTER na janela para voltar."
         );
     }
 
-    // =========================================================
-    // LEITURA DE DADOS
-    // =========================================================
-
-    public static int lerInteiro(String mensagem) {
+    public static int lerInteiro(
+            String mensagem) {
 
         while (true) {
 
-            System.out.print(mensagem);
+            System.out.print(
+                    mensagem
+            );
 
-            String entrada = scanner.nextLine();
+            String entrada =
+                    scanner.nextLine();
 
             try {
-                return Integer.parseInt(entrada);
+
+                return Integer.parseInt(
+                        entrada
+                );
+
             } catch (NumberFormatException e) {
 
                 System.out.println(
-                        "Digite apenas um numero inteiro."
+                        "Digite um numero inteiro."
                 );
             }
         }
     }
 
-    public static String lerTexto(String mensagem) {
+    public static String lerTexto(
+            String mensagem) {
 
         while (true) {
 
-            System.out.print(mensagem);
+            System.out.print(
+                    mensagem
+            );
 
-            String texto = scanner.nextLine().trim();
+            String texto =
+                    scanner.nextLine()
+                            .trim();
 
             if (!texto.isEmpty()) {
                 return texto;
@@ -708,34 +761,6 @@ public class Main {
 
             System.out.println(
                     "O texto nao pode ficar vazio."
-            );
-        }
-    }
-
-    public static boolean lerBoolean(String mensagem) {
-
-        while (true) {
-
-            System.out.print(mensagem);
-
-            String resposta =
-                    scanner.nextLine().trim().toLowerCase();
-
-            if (resposta.equals("s")
-                    || resposta.equals("sim")) {
-
-                return true;
-            }
-
-            if (resposta.equals("n")
-                    || resposta.equals("nao")
-                    || resposta.equals("não")) {
-
-                return false;
-            }
-
-            System.out.println(
-                    "Digite apenas S ou N."
             );
         }
     }
