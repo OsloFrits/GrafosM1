@@ -1,5 +1,4 @@
 import javax.swing.JPanel;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -15,75 +14,69 @@ import java.util.Set;
 public class PainelGrafo extends JPanel {
 
     private Lista lista;
-
-    private Map<Node, Point> posicoes =
-            new HashMap<>();
-
+    private Map<Node, Point> posicoes = new HashMap<>();
     private List<List<Node>> componentes;
-
+    private List<Node> ordemDFS;
+    private String titulo;
     private final int RAIO_VERTICE = 25;
 
     public PainelGrafo(Lista lista) {
-
         this.lista = lista;
-
-        setBackground(Color.GRAY);
-
+        this.titulo = "Grafo";
+        setBackground(Color.WHITE);
         calcularPosicoes();
     }
 
-    public PainelGrafo(
-            Lista lista,
-            List<List<Node>> componentes
-    ) {
+    public PainelGrafo(Lista lista, String titulo) {
+        this.lista = lista;
+        this.titulo = titulo;
+        setBackground(Color.WHITE);
+        calcularPosicoes();
+    }
 
+    public PainelGrafo(Lista lista, List<Node> ordemDFS, boolean ehDFS) {
+        this.lista = lista;
+        this.ordemDFS = ordemDFS;
+        this.titulo = "DFS";
+        setBackground(Color.WHITE);
+        calcularPosicoes();
+    }
+
+    public PainelGrafo(Lista lista, List<List<Node>> componentes) {
         this.lista = lista;
         this.componentes = componentes;
-
-        setBackground(Color.GRAY);
-
+        this.titulo = "Roy";
+        setBackground(Color.WHITE);
         calcularPosicoes();
     }
 
     private void calcularPosicoes() {
+        posicoes.clear();
 
-        List<Node> vertices =
-                lista.getListaDeAdjacencia();
+        List<Node> vertices = lista.getListaDeAdjacencia();
 
-        int largura = 800;
-        int altura = 550;
-
-        int centroX = largura / 2;
-        int centroY = altura / 2;
-
-        int raio =
-                Math.min(largura, altura) / 3;
-
-        int quantidade = vertices.size();
-
-        if (quantidade == 0) {
+        if (vertices.isEmpty()) {
             return;
         }
 
+        int largura = 800;
+        int altura = 480;
+        int centroX = largura / 2;
+        int centroY = altura / 2;
+        int centroRaio = Math.min(largura, altura) / 2 - 80;
+        int quantidade = vertices.size();
+
         for (int i = 0; i < quantidade; i++) {
+            double angulo = 2 * Math.PI * i / quantidade;
 
-            Node vertice = vertices.get(i);
+            int x = centroX
+                    + (int) (centroRaio * Math.cos(angulo));
 
-            double angulo =
-                    2 * Math.PI * i / quantidade;
-
-            int x = (int) (
-                    centroX
-                            + raio * Math.cos(angulo)
-            );
-
-            int y = (int) (
-                    centroY
-                            + raio * Math.sin(angulo)
-            );
+            int y = centroY
+                    + (int) (centroRaio * Math.sin(angulo));
 
             posicoes.put(
-                    vertice,
+                    vertices.get(i),
                     new Point(x, y)
             );
         }
@@ -91,93 +84,103 @@ public class PainelGrafo extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
 
-        Graphics2D g2 =
-                (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g;
 
-        try {
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
 
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
+        desenharTitulo(g2);
+        desenharArestas(g2);
+        desenharVertices(g2);
 
-            desenharArestas(g2);
-            desenharVertices(g2);
+        if (ordemDFS != null) {
+            desenharDFS(g2);
+        }
 
-        } finally {
-
-            g2.dispose();
+        if (componentes != null) {
+            desenharComponentes(g2);
         }
     }
 
-    private void desenharArestas(
-            Graphics2D g2
-    ) {
+    private void desenharTitulo(Graphics2D g2) {
+        g2.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        22
+                )
+        );
 
-        Set<Linha> arestasDesenhadas =
-                new HashSet<>();
+        g2.setColor(Color.BLACK);
 
-        for (Node vertice :
-                lista.getListaDeAdjacencia()) {
+        g2.drawString(
+                titulo,
+                20,
+                30
+        );
 
-            Point origem =
-                    posicoes.get(vertice);
+        if ("AGM".equals(titulo)) {
+            g2.setFont(
+                    new Font(
+                            "Arial",
+                            Font.BOLD,
+                            16
+                    )
+            );
 
-            if (origem == null) {
+            g2.drawString(
+                    "Peso total: " + lista.getPesoTotal(),
+                    20,
+                    55
+            );
+        }
+    }
+
+    private void desenharArestas(Graphics2D g2) {
+        Set<Linha> arestasDesenhadas = new HashSet<>();
+
+        for (Node origem : lista.getListaDeAdjacencia()) {
+            Point pontoOrigem = posicoes.get(origem);
+
+            if (pontoOrigem == null) {
                 continue;
             }
 
-            for (Linha linha :
-                    vertice.getAdjacencia()) {
-
-                if (!lista.isDirecionada()
-                        && arestasDesenhadas
-                        .contains(linha)) {
-
+            for (Linha linha : origem.getAdjacencia()) {
+                if (arestasDesenhadas.contains(linha)) {
                     continue;
                 }
 
                 Node destino;
 
-                if (lista.isDirecionada()) {
-
-                    destino =
-                            linha.getDestino();
-
+                if (linha.getOrigem() == origem) {
+                    destino = linha.getDestino();
                 } else {
-
-                    destino =
-                            linha.getOutraPonta(
-                                    vertice
-                            );
+                    destino = linha.getOrigem();
                 }
 
-                Point pontoDestino =
-                        posicoes.get(destino);
+                Point pontoDestino = posicoes.get(destino);
 
                 if (pontoDestino == null) {
                     continue;
                 }
 
-                if (vertice == destino) {
-
+                if (origem == destino) {
                     desenharLoop(
                             g2,
-                            origem,
-                            linha.getPeso()
+                            pontoOrigem,
+                            linha
                     );
-
                 } else {
-
-                    desenharAresta(
+                    desenharLinha(
                             g2,
-                            origem,
+                            pontoOrigem,
                             pontoDestino,
-                            linha.getPeso(),
-                            lista.isDirecionada()
+                            linha
                     );
                 }
 
@@ -186,98 +189,317 @@ public class PainelGrafo extends JPanel {
         }
     }
 
-    private void desenharAresta(
+    private void desenharLinha(
             Graphics2D g2,
             Point origem,
             Point destino,
-            int peso,
-            boolean direcionada
-    ) {
+            Linha linha) {
 
-        double dx =
-                destino.x - origem.x;
+        int x1 = origem.x;
+        int y1 = origem.y;
+        int x2 = destino.x;
+        int y2 = destino.y;
 
-        double dy =
-                destino.y - origem.y;
+        g2.setColor(Color.BLACK);
 
-        double distancia =
-                Math.sqrt(
-                        dx * dx + dy * dy
-                );
+        g2.drawLine(
+                x1,
+                y1,
+                x2,
+                y2
+        );
 
-        if (distancia == 0) {
-            return;
+        int meioX = (x1 + x2) / 2;
+        int meioY = (y1 + y2) / 2;
+
+        g2.setColor(Color.RED);
+
+        g2.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        14
+                )
+        );
+
+        g2.drawString(
+                String.valueOf(linha.getPeso()),
+                meioX,
+                meioY
+        );
+
+        if (lista.isDirecionada()) {
+            desenharSeta(
+                    g2,
+                    x1,
+                    y1,
+                    x2,
+                    y2
+            );
         }
+    }
 
-        double ux =
-                dx / distancia;
+    private void desenharSeta(
+            Graphics2D g2,
+            int x1,
+            int y1,
+            int x2,
+            int y2) {
 
-        double uy =
-                dy / distancia;
+        double angulo = Math.atan2(
+                y2 - y1,
+                x2 - x1
+        );
 
-        int inicioX =
-                (int) (
-                        origem.x
-                                + ux * RAIO_VERTICE
-                );
+        int tamanho = 10;
 
-        int inicioY =
-                (int) (
-                        origem.y
-                                + uy * RAIO_VERTICE
-                );
+        int xPonta = x2
+                - (int) (
+                RAIO_VERTICE
+                        * Math.cos(angulo)
+        );
 
-        int fimX =
-                (int) (
-                        destino.x
-                                - ux * RAIO_VERTICE
-                );
+        int yPonta = y2
+                - (int) (
+                RAIO_VERTICE
+                        * Math.sin(angulo)
+        );
 
-        int fimY =
-                (int) (
-                        destino.y
-                                - uy * RAIO_VERTICE
-                );
+        int xA = xPonta
+                - (int) (
+                tamanho
+                        * Math.cos(
+                        angulo - Math.PI / 6
+                )
+        );
 
-        g2.setColor(Color.DARK_GRAY);
+        int yA = yPonta
+                - (int) (
+                tamanho
+                        * Math.sin(
+                        angulo - Math.PI / 6
+                )
+        );
 
-        g2.setStroke(
-                new BasicStroke(4)
+        int xB = xPonta
+                - (int) (
+                tamanho
+                        * Math.cos(
+                        angulo + Math.PI / 6
+                )
+        );
+
+        int yB = yPonta
+                - (int) (
+                tamanho
+                        * Math.sin(
+                        angulo + Math.PI / 6
+                )
         );
 
         g2.drawLine(
-                inicioX,
-                inicioY,
-                fimX,
-                fimY
+                xPonta,
+                yPonta,
+                xA,
+                yA
         );
 
-        if (direcionada) {
+        g2.drawLine(
+                xPonta,
+                yPonta,
+                xB,
+                yB
+        );
+    }
 
-            desenharSeta(
-                    g2,
-                    inicioX,
-                    inicioY,
-                    fimX,
-                    fimY
-            );
-        }
+    private void desenharLoop(
+            Graphics2D g2,
+            Point ponto,
+            Linha linha) {
 
-        double deslocamento = 10;
+        int tamanho = 30;
 
-        double deslocamentoX =
-                -uy * deslocamento;
+        g2.setColor(Color.BLACK);
 
-        double deslocamentoY =
-                ux * deslocamento;
-
-        int meioX =
-                (inicioX + fimX) / 2;
-
-        int meioY =
-                (inicioY + fimY) / 2;
+        g2.drawOval(
+                ponto.x - tamanho / 2,
+                ponto.y - RAIO_VERTICE - tamanho,
+                tamanho,
+                tamanho
+        );
 
         g2.setColor(Color.RED);
+
+        g2.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        14
+                )
+        );
+
+        g2.drawString(
+                String.valueOf(linha.getPeso()),
+                ponto.x + 15,
+                ponto.y - 40
+        );
+    }
+
+    private void desenharVertices(Graphics2D g2) {
+        for (Node vertice : lista.getListaDeAdjacencia()) {
+            Point ponto = posicoes.get(vertice);
+
+            if (ponto == null) {
+                continue;
+            }
+
+            g2.setColor(
+                    obterCorVertice(vertice)
+            );
+
+            g2.fillOval(
+                    ponto.x - RAIO_VERTICE,
+                    ponto.y - RAIO_VERTICE,
+                    RAIO_VERTICE * 2,
+                    RAIO_VERTICE * 2
+            );
+
+            g2.setColor(Color.BLACK);
+
+            g2.drawOval(
+                    ponto.x - RAIO_VERTICE,
+                    ponto.y - RAIO_VERTICE,
+                    RAIO_VERTICE * 2,
+                    RAIO_VERTICE * 2
+            );
+
+            g2.setFont(
+                    new Font(
+                            "Arial",
+                            Font.BOLD,
+                            11
+                    )
+            );
+
+            String id =
+                    String.valueOf(vertice.getId());
+
+            String nome =
+                    vertice.getNome();
+
+            int larguraId =
+                    g2.getFontMetrics()
+                            .stringWidth(id);
+
+            int larguraNome =
+                    g2.getFontMetrics()
+                            .stringWidth(nome);
+
+            int alturaTexto =
+                    g2.getFontMetrics()
+                            .getAscent();
+
+            g2.drawString(
+                    id,
+                    ponto.x - larguraId / 2,
+                    ponto.y - 2
+            );
+
+            g2.drawString(
+                    nome,
+                    ponto.x - larguraNome / 2,
+                    ponto.y + alturaTexto
+            );
+
+            if (ordemDFS != null) {
+                int indice =
+                        ordemDFS.indexOf(vertice);
+
+                if (indice >= 0) {
+                    g2.setColor(Color.BLUE);
+
+                    g2.setFont(
+                            new Font(
+                                    "Arial",
+                                    Font.BOLD,
+                                    13
+                            )
+                    );
+
+                    g2.drawString(
+                            String.valueOf(indice + 1),
+                            ponto.x - 5,
+                            ponto.y - RAIO_VERTICE - 8
+                    );
+                }
+            }
+
+            if (componentes != null) {
+                for (int i = 0;
+                     i < componentes.size();
+                     i++) {
+
+                    if (componentes.get(i).contains(vertice)) {
+                        g2.setColor(Color.BLACK);
+
+                        g2.setFont(
+                                new Font(
+                                        "Arial",
+                                        Font.BOLD,
+                                        12
+                                )
+                        );
+
+                        g2.drawString(
+                                "S" + (i + 1),
+                                ponto.x - 8,
+                                ponto.y + RAIO_VERTICE + 15
+                        );
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private Color obterCorVertice(Node vertice) {
+        if (ordemDFS != null
+                && ordemDFS.contains(vertice)) {
+
+            return Color.GREEN;
+        }
+
+        if (componentes != null) {
+            for (int i = 0;
+                 i < componentes.size();
+                 i++) {
+
+                if (componentes.get(i).contains(vertice)) {
+                    if (i % 3 == 0) {
+                        return Color.CYAN;
+                    }
+
+                    if (i % 3 == 1) {
+                        return Color.ORANGE;
+                    }
+
+                    return Color.PINK;
+                }
+            }
+        }
+
+        return Color.LIGHT_GRAY;
+    }
+
+    private void desenharDFS(Graphics2D g2) {
+        if (ordemDFS == null
+                || ordemDFS.isEmpty()) {
+
+            return;
+        }
+
+        g2.setColor(Color.BLACK);
 
         g2.setFont(
                 new Font(
@@ -287,293 +509,82 @@ public class PainelGrafo extends JPanel {
                 )
         );
 
-        g2.drawString(
-                String.valueOf(peso),
-                (int) (
-                        meioX + deslocamentoX
-                ),
-                (int) (
-                        meioY + deslocamentoY
-                )
-        );
-    }
+        StringBuilder texto =
+                new StringBuilder("Ordem: ");
 
-    private void desenharSeta(
-            Graphics2D g2,
-            int inicioX,
-            int inicioY,
-            int fimX,
-            int fimY
-    ) {
+        for (int i = 0;
+             i < ordemDFS.size();
+             i++) {
 
-        double angulo =
-                Math.atan2(
-                        fimY - inicioY,
-                        fimX - inicioX
-                );
-
-        int tamanho = 12;
-
-        double angulo1 =
-                angulo + Math.PI * 0.8;
-
-        double angulo2 =
-                angulo - Math.PI * 0.8;
-
-        int x1 =
-                (int) (
-                        fimX
-                                + tamanho * Math.cos(angulo1)
-                );
-
-        int y1 =
-                (int) (
-                        fimY
-                                + tamanho * Math.sin(angulo1)
-                );
-
-        int x2 =
-                (int) (
-                        fimX
-                                + tamanho * Math.cos(angulo2)
-                );
-
-        int y2 =
-                (int) (
-                        fimY
-                                + tamanho * Math.sin(angulo2)
-                );
-
-        g2.drawLine(
-                fimX,
-                fimY,
-                x1,
-                y1
-        );
-
-        g2.drawLine(
-                fimX,
-                fimY,
-                x2,
-                y2
-        );
-    }
-
-    private void desenharLoop(
-            Graphics2D g2,
-            Point centro,
-            int peso
-    ) {
-
-        int tamanho = 35;
-
-        g2.setColor(Color.DARK_GRAY);
-
-        g2.setStroke(
-                new BasicStroke(2)
-        );
-
-        g2.drawOval(
-                centro.x - tamanho / 2,
-                centro.y - RAIO_VERTICE - tamanho,
-                tamanho,
-                tamanho
-        );
-
-        g2.setColor(Color.BLUE);
-
-        g2.drawString(
-                String.valueOf(peso),
-                centro.x + 15,
-                centro.y - RAIO_VERTICE - tamanho
-        );
-    }
-
-    private void desenharVertices(
-            Graphics2D g2
-    ) {
-
-        for (Node vertice :
-                lista.getListaDeAdjacencia()) {
-
-            Point ponto =
-                    posicoes.get(vertice);
-
-            if (ponto == null) {
-                continue;
-            }
-
-            int x =
-                    ponto.x - RAIO_VERTICE;
-
-            int y =
-                    ponto.y - RAIO_VERTICE;
-
-            g2.setColor(
-                    obterCorVertice(vertice)
+            texto.append(
+                    ordemDFS
+                            .get(i)
+                            .getNome()
             );
 
-            g2.fillOval(
-                    x,
-                    y,
-                    RAIO_VERTICE * 2,
-                    RAIO_VERTICE * 2
-            );
-
-            g2.setColor(Color.BLACK);
-
-            g2.setStroke(
-                    new BasicStroke(2)
-            );
-
-            g2.drawOval(
-                    x,
-                    y,
-                    RAIO_VERTICE * 2,
-                    RAIO_VERTICE * 2
-            );
-
-            String texto =
-                    String.valueOf(
-                            vertice.getId()
-                    );
-
-            g2.setFont(
-                    new Font(
-                            "Arial",
-                            Font.BOLD,
-                            14
-                    )
-            );
-
-            int larguraTexto =
-                    g2.getFontMetrics()
-                            .stringWidth(texto);
-
-            g2.drawString(
-                    texto,
-                    ponto.x
-                            - larguraTexto / 2,
-                    ponto.y + 5
-            );
-
-            if (componentes != null) {
-
-                int numero =
-                        numeroComponente(vertice);
-
-                if (numero != -1) {
-
-                    g2.setFont(
-                            new Font(
-                                    "Arial",
-                                    Font.BOLD,
-                                    12
-                            )
-                    );
-
-                    g2.drawString(
-                            "S" + (numero + 1),
-                            ponto.x - 10,
-                            ponto.y - 32
-                    );
-                }
+            if (i < ordemDFS.size() - 1) {
+                texto.append(" -> ");
             }
         }
+
+        g2.drawString(
+                texto.toString(),
+                20,
+                getHeight() - 20
+        );
     }
 
-    private Color obterCorVertice(
-            Node vertice
-    ) {
-
+    private void desenharComponentes(Graphics2D g2) {
         if (componentes == null) {
-            return new Color(
-                    220,
-                    235,
-                    255
-            );
+            return;
         }
 
-        int numero =
-                numeroComponente(vertice);
+        g2.setColor(Color.BLACK);
 
-        if (numero == -1) {
-            return new Color(
-                    220,
-                    235,
-                    255
-            );
-        }
-
-        Color[] cores = {
-
-                new Color(
-                        255,
-                        180,
-                        180
-                ),
-
-                new Color(
-                        180,
-                        220,
-                        255
-                ),
-
-                new Color(
-                        180,
-                        255,
-                        180
-                ),
-
-                new Color(
-                        255,
-                        230,
-                        150
-                ),
-
-                new Color(
-                        220,
-                        180,
-                        255
-                ),
-
-                new Color(
-                        180,
-                        255,
-                        240
-                ),
-
-                new Color(
-                        255,
-                        200,
-                        150
+        g2.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        15
                 )
-        };
+        );
 
-        return cores[
-                numero % cores.length
-                ];
-    }
-
-    private int numeroComponente(
-            Node vertice
-    ) {
-
-        if (componentes == null) {
-            return -1;
-        }
+        int y = 55;
 
         for (int i = 0;
              i < componentes.size();
              i++) {
 
-            if (componentes.get(i)
-                    .contains(vertice)) {
+            StringBuilder texto =
+                    new StringBuilder(
+                            "S" + (i + 1) + ": "
+                    );
 
-                return i;
+            for (int j = 0;
+                 j < componentes.get(i).size();
+                 j++) {
+
+                texto.append(
+                        componentes
+                                .get(i)
+                                .get(j)
+                                .getNome()
+                );
+
+                if (j <
+                        componentes.get(i).size() - 1) {
+
+                    texto.append(", ");
+                }
             }
-        }
 
-        return -1;
+            g2.drawString(
+                    texto.toString(),
+                    600,
+                    y
+            );
+
+            y += 20;
+        }
     }
 }

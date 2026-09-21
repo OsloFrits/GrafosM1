@@ -1,28 +1,54 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class BuscaProfundidade {
 
-    public static void executar(Lista grafo, int inicio) {
+    public static List<Node> executar(
+            Lista grafo,
+            int inicio) {
 
-        int quantidade = grafo.getListaDeAdjacencia().size();
-        boolean[] visitados = new boolean[quantidade];
-        System.out.println("BUSCA EM PROFUNDIDADE:");
+        int quantidade =
+                grafo.getListaDeAdjacencia().size();
 
-        busca(grafo, inicio, visitados);
+        boolean[] visitados =
+                new boolean[quantidade];
+
+        List<Node> ordem =
+                new ArrayList<>();
+
+        System.out.println(
+                "BUSCA EM PROFUNDIDADE:"
+        );
+
+        busca(
+                grafo,
+                inicio,
+                visitados,
+                ordem
+        );
 
         System.out.println();
+
+        return ordem;
     }
 
     private static void busca(
             Lista grafo,
             int atual,
-            boolean[] visitados
-    ) {
+            boolean[] visitados,
+            List<Node> ordem) {
 
         visitados[atual] = true;
+
         Node verticeAtual =
-                grafo.getListaDeAdjacencia().get(atual);
+                grafo.getListaDeAdjacencia()
+                        .get(atual);
+
+        ordem.add(verticeAtual);
 
         System.out.print(
-                verticeAtual.getNome() + " "
+                verticeAtual.getNome()
+                        + " "
         );
 
         for (int i = 0;
@@ -30,17 +56,21 @@ public class BuscaProfundidade {
              i++) {
 
             if (!visitados[i]) {
+
                 Node destino =
-                        grafo.getListaDeAdjacencia().get(i);
+                        grafo.getListaDeAdjacencia()
+                                .get(i);
 
                 if (existeAresta(
                         grafo,
                         verticeAtual,
                         destino)) {
+
                     busca(
                             grafo,
                             i,
-                            visitados
+                            visitados,
+                            ordem
                     );
                 }
             }
@@ -50,10 +80,10 @@ public class BuscaProfundidade {
     private static boolean existeAresta(
             Lista grafo,
             Node origem,
-            Node destino
-    ) {
+            Node destino) {
 
-        for (Linha linha : origem.getAdjacencia()) {
+        for (Linha linha :
+                origem.getAdjacencia()) {
 
             if (grafo.isDirecionada()) {
 
@@ -62,16 +92,18 @@ public class BuscaProfundidade {
 
                     return true;
                 }
-            }
 
-            else {
-                if ((linha.getOrigem() == origem
-                        && linha.getDestino() == destino)
+            } else {
 
-                        ||
+                if (
+                        (linha.getOrigem() == origem
+                                && linha.getDestino() == destino)
 
-                        (linha.getOrigem() == destino
-                        && linha.getDestino() == origem)) {
+                                ||
+
+                                (linha.getOrigem() == destino
+                                        && linha.getDestino() == origem)
+                ) {
 
                     return true;
                 }
