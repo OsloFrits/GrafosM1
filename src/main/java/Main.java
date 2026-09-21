@@ -1,10 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -605,114 +607,136 @@ public class Main {
             return;
         }
 
-        JFrame janela =
-                new JFrame("Grafo");
+        try {
 
-        ImageIcon imagemOriginal =
-                new ImageIcon(caminho);
+            BufferedImage imagem =
+                    ImageIO.read(arquivo);
 
-        Image imagem =
-                imagemOriginal.getImage();
+            if (imagem == null) {
 
-        int largura =
-                imagemOriginal.getIconWidth();
-
-        int altura =
-                imagemOriginal.getIconHeight();
-
-        int larguraMaxima = 1000;
-        int alturaMaxima = 700;
-
-        if (largura > larguraMaxima
-                || altura > alturaMaxima) {
-
-            double escalaX =
-                    (double) larguraMaxima
-                            / largura;
-
-            double escalaY =
-                    (double) alturaMaxima
-                            / altura;
-
-            double escala =
-                    Math.min(
-                            escalaX,
-                            escalaY
-                    );
-
-            largura =
-                    (int) (
-                            largura * escala
-                    );
-
-            altura =
-                    (int) (
-                            altura * escala
-                    );
-
-            imagem =
-                    imagem.getScaledInstance(
-                            largura,
-                            altura,
-                            Image.SCALE_SMOOTH
-                    );
-        }
-
-        JLabel label =
-                new JLabel(
-                        new ImageIcon(imagem)
+                System.out.println(
+                        "Nao foi possivel carregar a imagem."
                 );
 
-        label.setHorizontalAlignment(
-                SwingConstants.CENTER
-        );
+                return;
+            }
 
-        janela.add(
-                new JScrollPane(label),
-                BorderLayout.CENTER
-        );
+            JFrame janela =
+                    new JFrame("Grafo");
 
-        janela.setSize(
-                Math.min(
-                        largura + 50,
-                        1100
-                ),
-                Math.min(
-                        altura + 80,
-                        800
-                )
-        );
+            int largura =
+                    imagem.getWidth();
 
-        janela.setLocationRelativeTo(null);
+            int altura =
+                    imagem.getHeight();
 
-        janela.setDefaultCloseOperation(
-                JFrame.DISPOSE_ON_CLOSE
-        );
+            int larguraMaxima = 1000;
+            int alturaMaxima = 700;
 
-        janela.setVisible(true);
+            Image imagemExibicao =
+                    imagem;
 
-        label.setFocusable(true);
-        label.requestFocusInWindow();
+            if (largura > larguraMaxima
+                    || altura > alturaMaxima) {
 
-        label.addKeyListener(
-                new java.awt.event.KeyAdapter() {
+                double escalaX =
+                        (double) larguraMaxima
+                                / largura;
 
-                    @Override
-                    public void keyPressed(
-                            java.awt.event.KeyEvent e) {
+                double escalaY =
+                        (double) alturaMaxima
+                                / altura;
 
-                        if (e.getKeyCode()
-                                == java.awt.event.KeyEvent.VK_ENTER) {
+                double escala =
+                        Math.min(
+                                escalaX,
+                                escalaY
+                        );
 
-                            janela.dispose();
+                largura =
+                        (int) (
+                                largura * escala
+                        );
+
+                altura =
+                        (int) (
+                                altura * escala
+                        );
+
+                imagemExibicao =
+                        imagem.getScaledInstance(
+                                largura,
+                                altura,
+                                Image.SCALE_SMOOTH
+                        );
+            }
+
+            JLabel label =
+                    new JLabel(
+                            new ImageIcon(
+                                    imagemExibicao
+                            )
+                    );
+
+            label.setHorizontalAlignment(
+                    SwingConstants.CENTER
+            );
+
+            janela.add(
+                    new JScrollPane(label),
+                    BorderLayout.CENTER
+            );
+
+            janela.setSize(
+                    Math.min(
+                            largura + 50,
+                            1100
+                    ),
+                    Math.min(
+                            altura + 80,
+                            800
+                    )
+            );
+
+            janela.setLocationRelativeTo(null);
+
+            janela.setDefaultCloseOperation(
+                    JFrame.DISPOSE_ON_CLOSE
+            );
+
+            janela.setVisible(true);
+
+            label.setFocusable(true);
+            label.requestFocusInWindow();
+
+            label.addKeyListener(
+                    new java.awt.event.KeyAdapter() {
+
+                        @Override
+                        public void keyPressed(
+                                java.awt.event.KeyEvent e) {
+
+                            if (e.getKeyCode()
+                                    == java.awt.event.KeyEvent.VK_ENTER) {
+
+                                janela.dispose();
+                            }
                         }
                     }
-                }
-        );
+            );
 
-        System.out.println(
-                "Pressione ENTER na janela para voltar."
-        );
+            System.out.println(
+                    "Pressione ENTER na janela para voltar."
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Erro ao carregar a imagem."
+            );
+
+            e.printStackTrace();
+        }
     }
 
     public static int lerInteiro(

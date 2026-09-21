@@ -377,13 +377,21 @@ public class PainelGrafo extends JPanel {
                     new Font(
                             "Arial",
                             Font.BOLD,
-                            16
+                            11
                     )
             );
 
-            String nome = vertice.getNome();
+            String id =
+                    String.valueOf(vertice.getId());
 
-            int larguraTexto =
+            String nome =
+                    vertice.getNome();
+
+            int larguraId =
+                    g2.getFontMetrics()
+                            .stringWidth(id);
+
+            int larguraNome =
                     g2.getFontMetrics()
                             .stringWidth(nome);
 
@@ -392,9 +400,15 @@ public class PainelGrafo extends JPanel {
                             .getAscent();
 
             g2.drawString(
+                    id,
+                    ponto.x - larguraId / 2,
+                    ponto.y - 2
+            );
+
+            g2.drawString(
                     nome,
-                    ponto.x - larguraTexto / 2,
-                    ponto.y + alturaTexto / 2
+                    ponto.x - larguraNome / 2,
+                    ponto.y + alturaTexto
             );
 
             if (ordemDFS != null) {
