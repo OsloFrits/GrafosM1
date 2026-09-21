@@ -18,8 +18,18 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
-        Lista lista = new Lista(new ArrayList<>(), false);
+        char Resp='p';
+        boolean direcionado;
+        while(Resp != 'n' && Resp != 's') {
+            System.out.println("O grafo será direcionado?");
+            Resp = scanner.next().charAt(0);
+        }
+        if(Resp == 's'){
+            direcionado = true;
+        }else{
+            direcionado = false;
+        }
+        Lista lista = new Lista(new ArrayList<>(), direcionado);
 
         int opcao;
 
@@ -30,7 +40,7 @@ public class Main {
             switch (opcao) {
 
                 case 1:
-                    lista = GrafoTeste.criar();
+                    lista = GrafoTeste.criar(direcionado);
                     System.out.println("Grafo de teste carregado.");
                     break;
 

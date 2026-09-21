@@ -2,9 +2,9 @@ import java.util.ArrayList;
 
 public class GrafoTeste {
 
-    public static Lista criar() {
+    public static Lista criar(boolean direcionado) {
 
-        Lista lista = new Lista(new ArrayList<>(), false);
+        Lista lista = new Lista(new ArrayList<>(), direcionado);
 
         Node a = new Node(1, "A");
         Node b = new Node(2, "B");
